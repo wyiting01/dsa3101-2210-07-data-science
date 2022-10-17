@@ -92,11 +92,15 @@ filter1_page <- div(
     br(),
     fluidRow(
     ),
-    titlePanel("filter1"),
+    fluidRow(
+      setBackgroundImage(
+        src = "https://source.unsplash.com/pREq0ns_p_E/4069x2010"
+      ),
     fluidRow(
       column(8, align="center", offset = 2,
              hr(),
-             textInput("filter1", label = "Which Location would you like to work in?"),
+             div(id = 'filter1',(textInput("filter1", label = "Which Location would you like to work in?")),
+                                 tags$style(type="text/css", "#filter1 {color : white;}"),
              actionButton("east", label="East"),
              actionButton("north", label="North"),
              actionButton("south", label="South"),
@@ -105,17 +109,17 @@ filter1_page <- div(
              actionButton("southeast", label="Southeast"),
              actionButton("northwest", label="Northwest"),
              actionButton("southwest", label="Southwest")
-      ))))
+      ))))))
 filter2_page <- div(
   ui <-  fluidPage(
     br(),
     fluidRow(
     ),
-    titlePanel("filter2"),
     fluidRow(
       column(8, align="center", offset = 2,
              hr(),
-             textInput("filter2", label = "Which Industry would you like to work in?"),
+             div(id = 'filter2',(textInput("filter2", label = "Which Industry would you like to work in?")),
+                      tags$style(type="text/css", "#filter2 {color : white;}"),
              actionButton("Finance", label="Finance"),
              actionButton("media", label="Media"),
              actionButton("healthcare", label="Healthcare"),
@@ -130,18 +134,18 @@ filter2_page <- div(
              actionButton("manufacturing", label="Manufacturing"),
              actionButton("transport", label="transport"),
       )))
-)
+))
 
 filter3_page <- div(
   ui <-  fluidPage(
     br(),
     fluidRow(
     ),
-    titlePanel("filter3"),
     fluidRow(
       column(8, align="center", offset = 2,
              hr(),
-             textInput("filter3", label = "What Skills do you possess?"),
+             div(id = 'filter3',(textInput("filter3", label = "What Skills do you possess?")),
+                 tags$style(type="text/css", "#filter3 {color : white;}"),
              actionButton("python", label="Python"),
              actionButton("R", label="R programming"),
              actionButton("Java", label="Java"),
@@ -155,17 +159,17 @@ filter3_page <- div(
              actionButton("Software engineering", label="Software engineering"),
              actionButton("modelling", label="Modelling"),
       ))) 
-)
+))
 filter4_page <- div(
   ui <-  fluidPage(
     br(),
     fluidRow(
     ),
-    titlePanel("filter4"),
     fluidRow(
       column(8, align="center", offset = 2,
              hr(),
-             textInput("filter4", label = "What Job Type are you looking for?"),
+             div(id = 'filter4',textInput("filter4", label = "What Job Type are you looking for?")),
+                 tags$style(type="text/css", "#filter4 {color : white;}"),
              actionButton("fulltime", label="Full time"),
              actionButton("Parttime", label="Part time"),
              actionButton("Intern", label="Intern"),
@@ -173,22 +177,19 @@ filter4_page <- div(
 )
 
 filter5_page <- div(
-  ui <-
-    fluidPage(
-      br(),
-      fluidRow(
-      ),
-      titlePanel("filter5"),
-      fluidRow(
-        setBackgroundImage(
-          src = "https://source.unsplash.com/pREq0ns_p_E/4069x2010"
-        ),
-        column(8, align="center", offset = 2,
-               hr(),
-               sliderInput("integer", "What is your Expected Salary per month?:",
-                           min = 0, max = 10000,
-                           value = 0, step = 500)),
-      ))
+  ui <-  fluidPage(
+    br(),
+    fluidRow(
+    ),
+    fluidRow(
+      column(8, align="center", offset = 2,
+             hr(),
+             div(id = 'integer',
+                 sliderInput("integer", "What is your Expected Salary per month?:",
+                             min = 0, max = 10000,
+                             value = 0, step = 500),
+                 tags$style(type="text/css", "#integer {color : white;}")))
+    ))
 )
 
 router <- make_router(
