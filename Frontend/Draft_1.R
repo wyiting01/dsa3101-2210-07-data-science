@@ -11,6 +11,7 @@ library(shiny)
 library(shiny.router)
 library(shinydashboard)
 library(shinyWidgets)
+library(png)
 Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
 industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Automotive','Digital Marketing', 'Professional Services','Cyber Security', 'Mining','Government','Manufacturing','Transport')
 skills <- c('Python','R programming', 'Java', 'SQL', 'C++', 'C', 'Interpersonal skills', 'Machine Learning', 'Deep Learning', 'Data Visualisation', 'Data wrangling')
@@ -81,11 +82,31 @@ home_page <- div(
                   
                 )
         )
+      ),
+      fluidRow(
+        box(
+        title="Data Scientist Intern, FoodPanda",status="warning",solidHeader=TRUE,
+        "Full-time job $1000",
+        br(), "Industry: Delivery", br(), "Skills: Python",
+        width=4
+        ),
+        box(
+          title="Data Scientist Intern, FoodPanda",status="warning",solidHeader=TRUE,
+          "Full-time job $1000",
+          br(), "Industry: Delivery", br(), "Skills: Python",
+          width=4
+        ),
+        box(
+          title="Data Scientist Intern, FoodPanda",status="warning",solidHeader=TRUE,
+          "Full-time job $1000",
+          br(), "Industry: Delivery", br(), "Skills: Python",
+          width=4
+        )
+      )
+        )
       )
     )
-  )
-  
-)
+
 
 filter1_page <- div(
   ui <-  fluidPage(
@@ -96,20 +117,20 @@ filter1_page <- div(
       setBackgroundImage(
         src = "https://source.unsplash.com/pREq0ns_p_E/4069x2010"
       ),
-    fluidRow(
-      column(8, align="center", offset = 2,
-             hr(),
-             div(id = 'filter1',(textInput("filter1", label = "Which Location would you like to work in?")),
-                                 tags$style(type="text/css", "#filter1 {color : white;}"),
-             actionButton("east", label="East"),
-             actionButton("north", label="North"),
-             actionButton("south", label="South"),
-             actionButton("west", label="West"),
-             actionButton("northeast", label="NorthEast"),
-             actionButton("southeast", label="Southeast"),
-             actionButton("northwest", label="Northwest"),
-             actionButton("southwest", label="Southwest")
-      ))))))
+      fluidRow(
+        column(8, align="center", offset = 2,
+               hr(),
+               div(id = 'filter1',(textInput("filter1", label = "Which Location would you like to work in?")),
+                   tags$style(type="text/css", "#filter1 {color : white;}"),
+                   actionButton("east", label="East"),
+                   actionButton("north", label="North"),
+                   actionButton("south", label="South"),
+                   actionButton("west", label="West"),
+                   actionButton("northeast", label="NorthEast"),
+                   actionButton("southeast", label="Southeast"),
+                   actionButton("northwest", label="Northwest"),
+                   actionButton("southwest", label="Southwest")
+               ))))))
 filter2_page <- div(
   ui <-  fluidPage(
     br(),
@@ -119,22 +140,22 @@ filter2_page <- div(
       column(8, align="center", offset = 2,
              hr(),
              div(id = 'filter2',(textInput("filter2", label = "Which Industry would you like to work in?")),
-                      tags$style(type="text/css", "#filter2 {color : white;}"),
-             actionButton("Finance", label="Finance"),
-             actionButton("media", label="Media"),
-             actionButton("healthcare", label="Healthcare"),
-             actionButton("retail", label="Retail"),
-             actionButton("telecommunications", label="Telecommunications"),
-             actionButton("automotive", label="Automotive"),
-             actionButton("digitalmarketing", label="Digital Marketing"),
-             actionButton("professional_services", label="Professional services"),
-             actionButton("cyber_security", label="Cyber Security"),
-             actionButton("mining", label="Mining"),
-             actionButton("Government", label="Government"),
-             actionButton("manufacturing", label="Manufacturing"),
-             actionButton("transport", label="transport"),
-      )))
-))
+                 tags$style(type="text/css", "#filter2 {color : white;}"),
+                 actionButton("Finance", label="Finance"),
+                 actionButton("media", label="Media"),
+                 actionButton("healthcare", label="Healthcare"),
+                 actionButton("retail", label="Retail"),
+                 actionButton("telecommunications", label="Telecommunications"),
+                 actionButton("automotive", label="Automotive"),
+                 actionButton("digitalmarketing", label="Digital Marketing"),
+                 actionButton("professional_services", label="Professional services"),
+                 actionButton("cyber_security", label="Cyber Security"),
+                 actionButton("mining", label="Mining"),
+                 actionButton("Government", label="Government"),
+                 actionButton("manufacturing", label="Manufacturing"),
+                 actionButton("transport", label="transport"),
+             )))
+  ))
 
 filter3_page <- div(
   ui <-  fluidPage(
@@ -146,20 +167,20 @@ filter3_page <- div(
              hr(),
              div(id = 'filter3',(textInput("filter3", label = "What Skills do you possess?")),
                  tags$style(type="text/css", "#filter3 {color : white;}"),
-             actionButton("python", label="Python"),
-             actionButton("R", label="R programming"),
-             actionButton("Java", label="Java"),
-             actionButton("SQL", label="SQL"),
-             actionButton("C++", label="C++"),
-             actionButton("Interpersonal skills", label="Interpersonal skills"),
-             actionButton("Machine learning", label="Machine learning"),
-             actionButton("deep learning", label="Deep learning"),
-             actionButton("Data visualisation", label="Data visualisation"),
-             actionButton("Data wrangling", label="Data wrangling"),
-             actionButton("Software engineering", label="Software engineering"),
-             actionButton("modelling", label="Modelling"),
-      ))) 
-))
+                 actionButton("python", label="Python"),
+                 actionButton("R", label="R programming"),
+                 actionButton("Java", label="Java"),
+                 actionButton("SQL", label="SQL"),
+                 actionButton("C++", label="C++"),
+                 actionButton("Interpersonal skills", label="Interpersonal skills"),
+                 actionButton("Machine learning", label="Machine learning"),
+                 actionButton("deep learning", label="Deep learning"),
+                 actionButton("Data visualisation", label="Data visualisation"),
+                 actionButton("Data wrangling", label="Data wrangling"),
+                 actionButton("Software engineering", label="Software engineering"),
+                 actionButton("modelling", label="Modelling"),
+             ))) 
+  ))
 filter4_page <- div(
   ui <-  fluidPage(
     br(),
@@ -169,7 +190,7 @@ filter4_page <- div(
       column(8, align="center", offset = 2,
              hr(),
              div(id = 'filter4',textInput("filter4", label = "What Job Type are you looking for?")),
-                 tags$style(type="text/css", "#filter4 {color : white;}"),
+             tags$style(type="text/css", "#filter4 {color : white;}"),
              actionButton("fulltime", label="Full time"),
              actionButton("Parttime", label="Part time"),
              actionButton("Intern", label="Intern"),
