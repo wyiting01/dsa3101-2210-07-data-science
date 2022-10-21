@@ -12,6 +12,7 @@ library(shiny.router)
 library(shinydashboard)
 library(shinyWidgets)
 library(png)
+
 Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
 industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Automotive','Digital Marketing', 'Professional Services','Cyber Security', 'Mining','Government','Manufacturing','Transport')
 skills <- c('Python','R programming', 'Java', 'SQL', 'C++', 'C', 'Interpersonal skills', 'Machine Learning', 'Deep Learning', 'Data Visualisation', 'Data wrangling')
@@ -121,7 +122,7 @@ filter1_page <- div(
         column(8, align="center", offset = 2,
                hr(),
                div(id = 'filter1',(textInput("filter1", label = "Which Location would you like to work in?")),
-                   tags$style(type="text/css", "#filter1 {color : white;}"),
+                   tags$style(type="text/css", "#filter1 {color : white;font-size:20px;}",),
                    actionButton("east", label="East"),
                    actionButton("north", label="North"),
                    actionButton("south", label="South"),
@@ -130,7 +131,14 @@ filter1_page <- div(
                    actionButton("southeast", label="Southeast"),
                    actionButton("northwest", label="Northwest"),
                    actionButton("southwest", label="Southwest")
-               ))))))
+               )))),
+    fluidRow(
+      column(8, align = "right", offset = 2,
+             hr(),
+             div(id = 'next_page1',
+                 actionButton("skip", label="Skip"),
+                 actionButton("next", label="Next")))
+    )))
 filter2_page <- div(
   ui <-  fluidPage(
     br(),
@@ -140,7 +148,7 @@ filter2_page <- div(
       column(8, align="center", offset = 2,
              hr(),
              div(id = 'filter2',(textInput("filter2", label = "Which Industry would you like to work in?")),
-                 tags$style(type="text/css", "#filter2 {color : white;}"),
+                 tags$style(type="text/css", "#filter2 {color : white; font-size:20px;}", ),
                  actionButton("Finance", label="Finance"),
                  actionButton("media", label="Media"),
                  actionButton("healthcare", label="Healthcare"),
@@ -154,7 +162,14 @@ filter2_page <- div(
                  actionButton("Government", label="Government"),
                  actionButton("manufacturing", label="Manufacturing"),
                  actionButton("transport", label="transport"),
-             )))
+             ))),
+    fluidRow(
+      column(8, align = "right", offset = 2,
+             hr(),
+             div(id = 'next_page1',
+                 actionButton("skip", label="Skip"),
+                 actionButton("next", label="Next")))
+    )
   ))
 
 filter3_page <- div(
@@ -166,7 +181,7 @@ filter3_page <- div(
       column(8, align="center", offset = 2,
              hr(),
              div(id = 'filter3',(textInput("filter3", label = "What Skills do you possess?")),
-                 tags$style(type="text/css", "#filter3 {color : white;}"),
+                 tags$style(type="text/css", "#filter3 {color : white; font-size:20px;}"),
                  actionButton("python", label="Python"),
                  actionButton("R", label="R programming"),
                  actionButton("Java", label="Java"),
@@ -179,7 +194,14 @@ filter3_page <- div(
                  actionButton("Data wrangling", label="Data wrangling"),
                  actionButton("Software engineering", label="Software engineering"),
                  actionButton("modelling", label="Modelling"),
-             ))) 
+             ))),
+    fluidRow(
+      column(8, align = "right", offset = 2,
+             hr(),
+             div(id = 'next_page1',
+                 actionButton("skip", label="Skip"),
+                 actionButton("next", label="Next")))
+    )
   ))
 filter4_page <- div(
   ui <-  fluidPage(
@@ -190,11 +212,18 @@ filter4_page <- div(
       column(8, align="center", offset = 2,
              hr(),
              div(id = 'filter4',textInput("filter4", label = "What Job Type are you looking for?")),
-             tags$style(type="text/css", "#filter4 {color : white;}"),
+             tags$style(type="text/css", "#filter4 {color : white; font-size:20px;}"),
              actionButton("fulltime", label="Full time"),
              actionButton("Parttime", label="Part time"),
              actionButton("Intern", label="Intern"),
-      )))
+      ))),
+  fluidRow(
+    column(8, align = "right", offset = 2,
+           hr(),
+           div(id = 'next_page1',
+               actionButton("skip", label="Skip"),
+               actionButton("next", label="Next")))
+  )
 )
 
 filter5_page <- div(
@@ -209,9 +238,16 @@ filter5_page <- div(
                  sliderInput("integer", "What is your Expected Salary per month?:",
                              min = 0, max = 10000,
                              value = 0, step = 500),
-                 tags$style(type="text/css", "#integer {color : white;}")))
+                 tags$style(type="text/css", "#integer {color : white; font-size:20px;}")))
+    ),
+    fluidRow(
+      column(8, align = "right", offset = 2,
+             hr(),
+             div(id = 'next_page1',
+                 actionButton("skip", label="Skip"),
+                 actionButton("next", label="Next")))
+    )
     ))
-)
 
 router <- make_router(
   route("/", home_page),
