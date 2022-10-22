@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import pickle
 import numpy as np
 import pandas as pd
+import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -19,6 +20,7 @@ df_articles =''
 #declare variables
 ratings_list = []
 clicks_dict ={}
+nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 ps = PorterStemmer()
 app = Flask(__name__)
@@ -26,7 +28,7 @@ app = Flask(__name__)
 
 #Generate Recommendations
 '''
-Example Input = {
+user_input = {
 'expected_salary': 4000,
 'expected_hours': 'full time',
 'job_title':['Data Analyst','Data Scientist'],
@@ -34,6 +36,8 @@ Example Input = {
 'industry': ['Social media','Healthcare'],
 'skills': ['SQL','R','Python','Git','Flask']
 }
+
+x = requests.post('http://127.0.0.1:5000/recommendation',json=user_input)
 '''
 @app.route("/recommendation", methods=["POST","GET"])
 def generate_recommendation():
@@ -91,15 +95,11 @@ def generate_recommendation():
 for i in range(len(df_combined)):
     clicks_dict[i] = 0
 
-#Increment click Count, unsure whether this shud be post or put
+#Increment click Count, unsure whether this shud be post or put (might be patch)
 @app.route('/add_click',methods = ["PUT"])
 def add_click():
     return
 
-#Return click count
-@app.route('/get_click',methods = ["GET"])
-def get_click():
-    return
 
 #Generate Articles
 @app.route('/get_articles',methods = ["GET"])
