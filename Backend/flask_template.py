@@ -145,7 +145,7 @@ def add_rating():
 
 
 #Get average rating
-@app.route('/get_rating', methods = ['GET'])
+@app.route('/get_rating')
 def get_average_rating():
     curr_avg_rating = rating_dict['rating']
     return f'Average Rating: {curr_avg_rating}'
