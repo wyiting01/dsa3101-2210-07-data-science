@@ -7,6 +7,7 @@ COPY flask_template.py flask_template.py
 COPY tfidf_job.pkl tfidf_job.pkl 
 COPY tfidf_vectorizer.pkl tfidf_vectorizer.pkl
 COPY processed_data.csv processed_data.csv
+COPY articlesfrommedium.csv articlesfrommedium.csv
 
 RUN pip3 install -r requirements.txt
 
