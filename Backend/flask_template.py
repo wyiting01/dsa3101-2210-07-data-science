@@ -15,7 +15,7 @@ with open('tfidf_vectorizer.pkl', 'rb') as f:
     vectorizer = pickle.load(f)
 with open('tfidf_job.pkl','rb') as g:
     matrix = pickle.load(g)
-df_articles =''
+df_articles = pd.read_csv('articlesfrommedium.csv')
 
 #declare variables
 rating_dict = {
@@ -111,10 +111,16 @@ def add_click():
 
 
 #Generate Articles
-@app.route('/get_articles',methods = ["GET"])
+@app.route('/get_articles')
 def generate_articles():
-    return
-
+    length = len(df_articles)
+    index = np.random.randint(0, length, 10)
+    article_dict = {}
+    article_dict['index'] = [int(i) for i in index]
+    article_dict['title'] = list(df_articles['title'][index])
+    article_dict['url'] = list(df_articles['url'][index])
+    article_dict['tag'] = list(df_articles['tag'][index])
+    return jsonify(article_dict)
 
 #User input for recommendation rating
 @app.route('/update_rating',methods = ["POST"])
@@ -136,6 +142,7 @@ def add_rating():
             rating_dict['total'] += content
             rating_dict['rating'] = rating_dict['total']/rating_dict['count']
     return render_template('rating.html', five_stars=rating_dict['five_stars'], four_stars=rating_dict['four_stars'], three_stars=rating_dict['three_stars'], two_stars=rating_dict['two_stars'], one_star=rating_dict['one_star'], count=rating_dict['count'], rating=rating_dict['rating'])
+
 
 #Get average rating
 @app.route('/get_rating', methods = ['GET'])
