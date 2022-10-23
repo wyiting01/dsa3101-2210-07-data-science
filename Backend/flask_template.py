@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import pickle
 import numpy as np
 import pandas as pd
@@ -18,7 +18,16 @@ with open('tfidf_job.pkl','rb') as g:
 df_articles =''
 
 #declare variables
-ratings_list = []
+rating_dict = {
+    "five_stars": "0",
+    "four_stars": "0",
+    "three_stars": "0",
+    "two_stars": "0",
+    "one_star": "0",
+    "count": "0",
+    "total": "0",
+    "rating": "0"
+}
 clicks_dict ={}
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
@@ -110,12 +119,29 @@ def generate_articles():
 #User input for recommendation rating
 @app.route('/update_rating',methods = ["POST"])
 def add_rating():
-    return
+    if 'rating' in request.form:
+        content = int(request.form['rating'])
+        if content:
+            if content == 5:
+                rating_dict['five_stars'] += 1
+            elif content == 4:
+                rating_dict['four_stars'] += 1
+            elif content == 3:
+                rating_dict['three_stars'] += 1
+            elif content == 2:
+                rating_dict['two_stars'] += 1
+            elif content == 1:
+                rating_dict['one_star'] += 1
+            rating_dict['count'] += 1
+            rating_dict['total'] += content
+            rating_dict['rating'] = rating_dict['total']/rating_dict['count']
+    return render_template('rating.html', five_stars=rating_dict['five_stars'], four_stars=rating_dict['four_stars'], three_stars=rating_dict['three_stars'], two_stars=rating_dict['two_stars'], one_star=rating_dict['one_star'], count=rating_dict['count'], rating=rating_dict['rating'])
 
 #Get average rating
 @app.route('/get_rating', methods = ['GET'])
 def get_average_rating():
-    return
+    curr_avg_rating = rating_dict['rating']
+    return f'Average Rating: {curr_avg_rating}'
 
 
 #Helper Functions
