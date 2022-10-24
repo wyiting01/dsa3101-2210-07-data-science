@@ -105,10 +105,15 @@ for i in range(len(df_combined)):
     clicks_dict[i] = 0
 
 #Increment click Count, unsure whether this shud be post or put (might be patch)
-@app.route('/add_click',methods = ["PUT"])
+@app.route('/add_click',methods = ["POST"])
 def add_click():
-    return
-
+    #index = df_combined[df_combined['url']==url].index.values[0]
+    index=request.get_json()['url']
+    try:
+        clicks_dict[index] += 1
+    except:
+        clicks_dict[index] = 1
+    return str(clicks_dict[index])
 
 #Generate Articles
 @app.route('/get_articles')
