@@ -114,7 +114,7 @@ def add_click():
 @app.route('/get_articles')
 def generate_articles():
     length = len(df_articles)
-    index = np.random.randint(0, length, 10)
+    index = np.random.randint(0, length-1, 10)
     article_dict = {}
     article_dict['index'] = [int(i) for i in index]
     article_dict['title'] = list(df_articles['title'][index])
