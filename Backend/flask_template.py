@@ -19,14 +19,14 @@ df_articles = pd.read_csv('articlesfrommedium.csv')
 
 #declare variables
 rating_dict = {
-    "five_stars": "0",
-    "four_stars": "0",
-    "three_stars": "0",
-    "two_stars": "0",
-    "one_star": "0",
-    "count": "0",
-    "total": "0",
-    "rating": "0"
+    "five_stars": 0,
+    "four_stars": 0,
+    "three_stars": 0,
+    "two_stars": 0,
+    "one_star": 0,
+    "count": 0,
+    "total": 0,
+    "rating": 0
 }
 clicks_dict ={}
 nltk.download('stopwords')
@@ -128,32 +128,42 @@ def generate_articles():
     return jsonify(article_dict)
 
 #User input for recommendation rating
-@app.route('/update_rating',methods = ["POST"])
-def add_rating():
-    if 'rating' in request.form:
-        content = int(request.form['rating'])
-        if content:
-            if content == 5:
-                rating_dict['five_stars'] += 1
-            elif content == 4:
-                rating_dict['four_stars'] += 1
-            elif content == 3:
-                rating_dict['three_stars'] += 1
-            elif content == 2:
-                rating_dict['two_stars'] += 1
-            elif content == 1:
-                rating_dict['one_star'] += 1
-            rating_dict['count'] += 1
-            rating_dict['total'] += content
-            rating_dict['rating'] = rating_dict['total']/rating_dict['count']
-    return render_template('rating.html', five_stars=rating_dict['five_stars'], four_stars=rating_dict['four_stars'], three_stars=rating_dict['three_stars'], two_stars=rating_dict['two_stars'], one_star=rating_dict['one_star'], count=rating_dict['count'], rating=rating_dict['rating'])
+'''
+user_rating_input = {
+'rating': 3
+}
 
+x = requests.post('http://127.0.0.1:5000/update_rating', json = user_rating_input)
+output = x.json()
+'''
+@app.route('/update_rating', methods=["POST","GET"])
+def add_rating():
+    user_input = request.get_json()
+    user_input_rating = int(user_input['rating'])
+    if user_input_rating == 5:
+        rating_dict['five_stars'] += 1
+    elif user_input_rating == 4:
+        rating_dict['four_stars'] += 1
+    elif user_input_rating == 3:
+        rating_dict['three_stars'] += 1
+    elif user_input_rating == 2:
+        rating_dict['two_stars'] += 1
+    elif user_input_rating == 1:
+        rating_dict['one_star'] += 1
+    rating_dict['count'] += 1
+    rating_dict['total'] += user_input_rating
+    rating_dict['rating'] = rating_dict['total']/rating_dict['count']
+    return jsonify(rating_dict)
 
 #Get average rating
+'''
+x = requests.get('http://127.0.0.1:5000/get_rating')
+print(x.text)
+'''
 @app.route('/get_rating')
 def get_average_rating():
     curr_avg_rating = rating_dict['rating']
-    return f'Average Rating: {curr_avg_rating}'
+    return f'Average Rating: {round(curr_avg_rating, 2)}'
 
 
 #Helper Functions
