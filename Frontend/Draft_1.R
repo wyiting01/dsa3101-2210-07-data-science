@@ -12,6 +12,7 @@ library(shiny.router)
 library(shinydashboard)
 library(shinyWidgets)
 library(png)
+library(flexdashboard)
 
 Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
 industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Automotive','Digital Marketing', 'Professional Services','Cyber Security', 'Mining','Government','Manufacturing','Transport')
@@ -86,22 +87,33 @@ home_page <- div(
       ),
       fluidRow(
         box(
-        title="Data Scientist Intern, FoodPanda",status="warning",solidHeader=TRUE,
+        title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
         "Full-time job $1000",
         br(), "Industry: Delivery", br(), "Skills: Python",
-        width=4
+        fluidRow(
+        gaugeOutput("gauge1"),
+        ),
+        width=4,
+        
         ),
         box(
-          title="Data Scientist Intern, FoodPanda",status="warning",solidHeader=TRUE,
+          title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
           "Full-time job $1000",
           br(), "Industry: Delivery", br(), "Skills: Python",
-          width=4
+          fluidRow(
+            gaugeOutput("gauge2"),
+          ),
+          width=4,
         ),
+        
         box(
-          title="Data Scientist Intern, FoodPanda",status="warning",solidHeader=TRUE,
+          title="Anlayst Intern, Anlytics",status="warning",solidHeader=TRUE,
           "Full-time job $1000",
           br(), "Industry: Delivery", br(), "Skills: Python",
-          width=4
+          fluidRow(
+           gaugeOutput("gauge3")
+          ),
+          width=4,
         )
       )
         )
@@ -271,6 +283,46 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   router$server(input, output, session)
+  output$gauge = renderGauge({
+    gauge(98, 
+          min = 0, 
+          max = 100, 
+          sectors = gaugeSectors(success = c(80, 100), 
+                                 warning = c(50, 79),
+                                 danger = c(0, 49)),
+          symbol = "%",
+          label = "MATCH")
+  })
+  output$gauge1 = renderGauge({
+    gauge(98, 
+          min = 0, 
+          max = 100, 
+          sectors = gaugeSectors(success = c(80, 100), 
+                                 warning = c(50, 79),
+                                 danger = c(0, 49)),
+          symbol = "%",
+          label = "MATCH")
+  })
+  output$gauge2 = renderGauge({
+    gauge(60, 
+          min = 0, 
+          max = 100, 
+          sectors = gaugeSectors(success = c(80, 100), 
+                                 warning = c(50, 79),
+                                 danger = c(0, 49)),
+          symbol = "%",
+          label = "MATCH")
+  })
+  output$gauge3 = renderGauge({
+    gauge(40, 
+          min = 0, 
+          max = 100, 
+          sectors = gaugeSectors(success = c(80, 100), 
+                                 warning = c(50, 79),
+                                 danger = c(0, 49)),
+          symbol = "%",
+          label = "MATCH")
+  })
 }
 
 shinyApp(ui, server)
