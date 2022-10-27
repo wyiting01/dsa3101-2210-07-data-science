@@ -19,6 +19,107 @@ industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Auto
 skills <- c('Python','R programming', 'Java', 'SQL', 'C++', 'C', 'Interpersonal skills', 'Machine Learning', 'Deep Learning', 'Data Visualisation', 'Data wrangling')
 jobtype <- c('Full time', 'Full time', 'Internship')
 # Define UI for application that draws a histogram
+home_page <- div(
+  ui <- dashboardPage(
+    dashboardHeader(title = "Data Scientist Hunt"),
+    dashboardSidebar(
+      sidebarMenu(
+        menuItem("Search", tabName = "Search", icon = icon("search")),
+        menuItem("Saved", tabName = "Saved", icon = icon("save")),
+        menuItem("Applied", tabName = "Applied", icon = icon("thumbs-up"))
+      )
+    ),
+    
+    dashboardBody(
+      
+      tabItems(
+        tabItem("Search",
+                fluidPage(
+                  br(),
+                  fluidRow(
+                  ),
+                  ui <- navbarPage(fluid = TRUE, title = "GetHired",
+                                   tabPanel( value= "search_panel",
+                                             textInput("search", label=NULL, value="Find jobs",
+                                             )),
+                                   
+                                   tabPanel("Jobs",
+                                            h4("This page lists saved jobs?")),
+                                   tabPanel("Career Guide",
+                                            h4("This page has resume support etc.")),
+                                   tabPanel("Learn!",
+                                            h4("This page has technical test and courses")),
+                                   tabPanel("My Profile",
+                                            h4("This page contains user profile"))
+                                   
+                  ),
+                  fluidRow(
+                    column(4,
+                           hr(),
+                           sliderInput("integer", "Expected Salary:",
+                                       min = 0, max = 10000,
+                                       value = 0, step = 500)),
+                    column(4,
+                           hr(),
+                           selectInput('in2', 'Industry', c(Choose='', industry), selectize=FALSE)
+                    ),
+                    column(4,
+                           hr(),
+                           selectInput('in3', 'Location', c(Choose='', Location),selectize=FALSE)
+                    )
+                  ),
+                  fluidRow(
+                    column(4,
+                           hr(),
+                           selectInput('in3', 'Job type', c(Choose='', jobtype),selectize=FALSE)
+                    ),
+                    column(4,
+                           hr(),
+                           selectInput('in5', 'Skills', c(Choose='', skills), selectize=FALSE)
+                    ),
+                    column(4,
+                           hr(),
+                           actionButton("search", label = "Search", width = '250px'))
+                  )
+                  
+                )
+        )
+      ),
+      fluidRow(
+        box(
+        title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
+        "Full-time job $1000",
+        br(), "Industry: Delivery", br(), "Skills: Python",
+        fluidRow(
+        gaugeOutput("gauge1"),
+        ),
+        width=4,
+        
+        ),
+        box(
+          title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
+          "Full-time job $1000",
+          br(), "Industry: Delivery", br(), "Skills: Python",
+          fluidRow(
+            gaugeOutput("gauge2"),
+          ),
+          width=4,
+        ),
+        
+        box(
+          title="Anlayst Intern, Anlytics",status="warning",solidHeader=TRUE,
+          "Full-time job $1000",
+          br(), "Industry: Delivery", br(), "Skills: Python",
+          fluidRow(
+           gaugeOutput("gauge3")
+          ),
+          width=4,
+        )
+      )
+        )
+      )
+    )
+
 
 filter1_page <- div(
   ui <-  fluidPage(
@@ -158,134 +259,27 @@ filter5_page <- div(
                  actionButton("skip", label="Skip"),
                  actionButton("next", label="Next")))
     )
-  ))
-
-
-
-
-home_page <- div(
-  ui <- dashboardPage(
-    dashboardHeader(title = "Data Scientist Hunt"),
-    dashboardSidebar(
-      sidebarMenu(
-        menuItem("Search", tabName = "Search", icon = icon("search")),
-        menuItem("Saved", tabName = "Saved", icon = icon("save")),
-        menuItem("Applied", tabName = "Applied", icon = icon("thumbs-up"))
-      )
-    ),
-    
-    dashboardBody(
-      
-      tabItems(
-        tabItem("Search",
-                fluidPage(
-                  br(),
-                  fluidRow(
-                  ),
-                  ui <- navbarPage(fluid = TRUE, title = "GetHired",
-                                   tabPanel( value= "search_panel",
-                                             textInput("search", label=NULL, value="Find jobs",
-                                             )),
-                                   
-                                   tabPanel("Jobs",
-                                            h4("This page lists saved jobs?")),
-                                   tabPanel("Career Guide",
-                                            h4("This page has resume support etc.")),
-                                   tabPanel("Learn!",
-                                            h4("This page has technical test and courses")),
-                                   tabPanel("My Profile",
-                                            h4("This page contains user profile"))
-                                   
-                  ),
-                  fluidRow(
-                    column(4,
-                           hr(),
-                           sliderInput("integer", "Expected Salary:",
-                                       min = 0, max = 10000,
-                                       value = 0, step = 500)),
-                    column(4,
-                           hr(),
-                           selectInput('in2', 'Industry', c(Choose='', industry), selectize=FALSE)
-                    ),
-                    column(4,
-                           hr(),
-                           selectInput('in3', 'Location', c(Choose='', Location),selectize=FALSE)
-                    )
-                  ),
-                  fluidRow(
-                    column(4,
-                           hr(),
-                           selectInput('in3', 'Job type', c(Choose='', jobtype),selectize=FALSE)
-                    ),
-                    column(4,
-                           hr(),
-                           selectInput('in5', 'Skills', c(Choose='', skills), selectize=FALSE)
-                    ),
-                    column(4,
-                           hr(),
-                           actionButton("search", label = "Search", width = '250px'))
-                  )
-                  
-                )
-        )
-      ),
-      fluidRow(
-        box(
-        title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
-        "Full-time job $1000",
-        br(), "Industry: Delivery", br(), "Skills: Python",
-        fluidRow(
-        gaugeOutput("gauge1"),
-        ),
-        width=4,
-        
-        ),
-        box(
-          title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
-          "Full-time job $1000",
-          br(), "Industry: Delivery", br(), "Skills: Python",
-          fluidRow(
-            gaugeOutput("gauge2"),
-          ),
-          width=4,
-        ),
-        
-        box(
-          title="Anlayst Intern, Anlytics",status="warning",solidHeader=TRUE,
-          "Full-time job $1000",
-          br(), "Industry: Delivery", br(), "Skills: Python",
-          fluidRow(
-           gaugeOutput("gauge3")
-          ),
-          width=4,
-        )
-      )
-        )
-      )
-    )
+    ))
 
 router <- make_router(
+  route("/", home_page),
   route("filter1", filter1_page),
   route("filter2", filter2_page),
   route("filter3", filter3_page),
   route("filter4", filter4_page),
-  route("filter5", filter5_page),
-  route("/", home_page)
+  route("filter5", filter5_page)
 )
 ui <- fluidPage(
   tags$ul(
+    tags$li(a(href = route_link("/"), "Dashboard")),
     tags$li(a(href = route_link("filter1"), "filter1")),
     tags$li(a(href = route_link("filter2"), "filter2")),
     tags$li(a(href = route_link("filter3"), "filter3")),
     tags$li(a(href = route_link("filter4"), "filter4")),
-    tags$li(a(href = route_link("filter5"), "filter5")),
-    tags$li(a(href = route_link("/"), "Dashboard")),
+    tags$li(a(href = route_link("filter5"), "filter5"))
   ),
   router$ui
 )
-
-
-
 
 server <- function(input, output, session) {
   router$server(input, output, session)
