@@ -87,14 +87,14 @@ home_page <- div(
       ),
       fluidRow(
         box(
-          title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
-          "Full-time job $1000",
-          br(), "Industry: Delivery", br(), "Skills: Python",
-          fluidRow(
-            gaugeOutput("gauge1"),
-          ),
-          width=4,
-          
+        title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
+        "Full-time job $1000",
+        br(), "Industry: Delivery", br(), "Skills: Python",
+        fluidRow(
+        gaugeOutput("gauge1"),
+        ),
+        width=4,
+        
         ),
         box(
           title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
@@ -111,14 +111,14 @@ home_page <- div(
           "Full-time job $1000",
           br(), "Industry: Delivery", br(), "Skills: Python",
           fluidRow(
-            gaugeOutput("gauge3")
+           gaugeOutput("gauge3")
           ),
           width=4,
         )
       )
+        )
+      )
     )
-  )
-)
 
 
 filter1_page <- div(
@@ -259,7 +259,7 @@ filter5_page <- div(
                  actionButton("skip", label="Skip"),
                  actionButton("next", label="Next")))
     )
-  ))
+    ))
 
 router <- make_router(
   route("/", home_page),
