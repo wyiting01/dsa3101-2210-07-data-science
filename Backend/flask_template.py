@@ -47,6 +47,7 @@ user_input = {
 }
 
 x = requests.post('http://127.0.0.1:5000/recommendation',json=user_input)
+output = x.json()
 '''
 @app.route("/recommendation", methods=["POST","GET"])
 def generate_recommendation():
@@ -104,21 +105,29 @@ def generate_recommendation():
 for i in range(len(df_combined)):
     clicks_dict[i] = 0
 
-#Increment click Count, unsure whether this shud be post or put (might be patch)
+#Increment click Count
+'''
+user_input = {'url':'https://www.mycareersfuture.gov.sg/job/customer-service/production-control-manager-snl-logistics-0c5bc4f0f94d1bec1b79d160dce04603?source=MCF&event=Search'}
+x = requests.post('http://127.0.0.1:5000/add_click', json = user_input)
+output = x.text
+'''
 @app.route('/add_click',methods = ["POST"])
 def add_click():
-    #index = df_combined[df_combined['url']==url].index.values[0]
-    index=request.get_json()['url']
-    try:
-        clicks_dict[index] += 1
-    except:
-        clicks_dict[index] = 1
+    #finds the index of the url and increments its clickcount
+    url = request.get_json()['url']
+    index = df_combined[df_combined['url']==url].index.values[0]
+    clicks_dict[index] += 1
     return str(clicks_dict[index])
 
 #Generate Articles
-@app.route('/get_articles')
+'''
+x = requests.get('http://127.0.0.1:5000/get_articles')
+output = x.json()
+'''
+@app.route('/get_articles', methods = ["GET"])
 def generate_articles():
     length = len(df_articles)
+    #Pick 10 random articles from df_articles
     index = np.random.randint(0, length-1, 10)
     article_dict = {}
     article_dict['index'] = [int(i) for i in index]
@@ -158,12 +167,12 @@ def add_rating():
 #Get average rating
 '''
 x = requests.get('http://127.0.0.1:5000/get_rating')
-print(x.text)
+output = x.text
 '''
-@app.route('/get_rating')
+@app.route('/get_rating', methods=["GET"])
 def get_average_rating():
     curr_avg_rating = rating_dict['rating']
-    return f'Average Rating: {round(curr_avg_rating, 2)}'
+    return f'{round(curr_avg_rating, 2)}'
 
 
 #Helper Functions
