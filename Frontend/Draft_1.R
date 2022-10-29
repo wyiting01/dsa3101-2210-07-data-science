@@ -19,6 +19,13 @@ industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Auto
 skills <- c('Python','R programming', 'Java', 'SQL', 'C++', 'C', 'Interpersonal skills', 'Machine Learning', 'Deep Learning', 'Data Visualisation', 'Data wrangling')
 jobtype <- c('Full time', 'Full time', 'Internship')
 # Define UI for application that draws a histogram
+pageButtonUi <- function(id) {
+  actionButton(NS(id, "page_change"),
+               label="Change the Page")
+}
+
+#shinyServer(function(input, output, session) {
+
 home_page <- div(
   ui <- dashboardPage(
     dashboardHeader(title = "Data Scientist Hunt"),
@@ -29,18 +36,16 @@ home_page <- div(
         menuItem("Applied", tabName = "Applied", icon = icon("thumbs-up"))
       )
     ),
-    
     dashboardBody(
       
       tabItems(
         tabItem("Search",
                 fluidPage(
                   br(),
-                  fluidRow(
-                  ),
+                  fluidRow(),
                   ui <- navbarPage(fluid = TRUE, title = "GetHired",
                                    tabPanel( value= "search_panel",
-                                             textInput("search", label=NULL, value="Find jobs",
+                                             textInput("search", label=NULL, value="Find jobs"
                                              )),
                                    
                                    tabPanel("Jobs",
@@ -87,38 +92,47 @@ home_page <- div(
       ),
       fluidRow(
         box(
-        title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
+        title="Analyst Intern, Analytics",status="warning",solidHeader=TRUE,
         "Full-time job $1000",
         br(), "Industry: Delivery", br(), "Skills: Python",
         fluidRow(
-        gaugeOutput("gauge1"),
+          gaugeOutput("gauge1"),
+          box(
+            title = actionLink("titleId", "Update", icon = icon("refresh")), 
+            width = 4, solidHeader = TRUE, status = "primary",
+            uiOutput("boxContentUI")
+          )
         ),
-        width=4,
+        width=4
+        ),
         
-        ),
+        
         box(
-          title="Analyst Intern, Anlytics",status="warning",solidHeader=TRUE,
+          title="Analyst Intern, Analytics",status="warning",solidHeader=TRUE,
           "Full-time job $1000",
           br(), "Industry: Delivery", br(), "Skills: Python",
+          # title = p("Title 1", 
+          #           actionButton("titleBtId", "", icon = icon("refresh"),
+          #                        class = "btn-xs", title = "Update"),
           fluidRow(
-            gaugeOutput("gauge2"),
+            gaugeOutput("gauge2")
           ),
-          width=4,
+          width=4
         ),
         
         box(
-          title="Anlayst Intern, Anlytics",status="warning",solidHeader=TRUE,
+          title="Anlayst Intern, Analytics",status="warning",solidHeader=TRUE,
           "Full-time job $1000",
           br(), "Industry: Delivery", br(), "Skills: Python",
           fluidRow(
            gaugeOutput("gauge3")
           ),
-          width=4,
+          width=4
         )
       )
         )
       )
-    )
+)
 
 
 filter1_page <- div(
@@ -134,7 +148,7 @@ filter1_page <- div(
         column(8, align="center", offset = 2,
                hr(),
                div(id = 'filter1',(textInput("filter1", label = "Which Location would you like to work in?")),
-                   tags$style(type="text/css", "#filter1 {color : white;font-size:20px;}",),
+                   tags$style(type="text/css", "#filter1 {color : white;font-size:20px;}"),
                    actionButton("east", label="East"),
                    actionButton("north", label="North"),
                    actionButton("south", label="South"),
@@ -160,7 +174,7 @@ filter2_page <- div(
       column(8, align="center", offset = 2,
              hr(),
              div(id = 'filter2',(textInput("filter2", label = "Which Industry would you like to work in?")),
-                 tags$style(type="text/css", "#filter2 {color : white; font-size:20px;}", ),
+                 tags$style(type="text/css", "#filter2 {color : white; font-size:20px;}" ),
                  actionButton("Finance", label="Finance"),
                  actionButton("media", label="Media"),
                  actionButton("healthcare", label="Healthcare"),
@@ -173,7 +187,7 @@ filter2_page <- div(
                  actionButton("mining", label="Mining"),
                  actionButton("Government", label="Government"),
                  actionButton("manufacturing", label="Manufacturing"),
-                 actionButton("transport", label="transport"),
+                 actionButton("transport", label="transport")
              ))),
     fluidRow(
       column(8, align = "right", offset = 2,
@@ -205,7 +219,7 @@ filter3_page <- div(
                  actionButton("Data visualisation", label="Data visualisation"),
                  actionButton("Data wrangling", label="Data wrangling"),
                  actionButton("Software engineering", label="Software engineering"),
-                 actionButton("modelling", label="Modelling"),
+                 actionButton("modelling", label="Modelling")
              ))),
     fluidRow(
       column(8, align = "right", offset = 2,
@@ -215,6 +229,7 @@ filter3_page <- div(
                  actionButton("next", label="Next")))
     )
   ))
+
 filter4_page <- div(
   ui <-  fluidPage(
     br(),
@@ -227,7 +242,7 @@ filter4_page <- div(
              tags$style(type="text/css", "#filter4 {color : white; font-size:20px;}"),
              actionButton("fulltime", label="Full time"),
              actionButton("Parttime", label="Part time"),
-             actionButton("Intern", label="Intern"),
+             actionButton("Intern", label="Intern")
       ))),
   fluidRow(
     column(8, align = "right", offset = 2,
@@ -236,7 +251,8 @@ filter4_page <- div(
                actionButton("skip", label="Skip"),
                actionButton("next", label="Next")))
   )
-)
+  )
+
 
 filter5_page <- div(
   ui <-  fluidPage(
@@ -259,7 +275,8 @@ filter5_page <- div(
                  actionButton("skip", label="Skip"),
                  actionButton("next", label="Next")))
     )
-    ))
+  )
+)
 
 router <- make_router(
   route("/", home_page),
@@ -323,7 +340,13 @@ server <- function(input, output, session) {
           symbol = "%",
           label = "MATCH")
   })
+  output$boxContentUI2 <- renderUI({
+    input$titleBtId
+    pre(paste(sample(LETTERS,10), collapse = ", "))
+  })  
 }
+
+
 
 shinyApp(ui, server)
 
