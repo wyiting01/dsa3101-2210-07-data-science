@@ -88,51 +88,74 @@ home_page <- div(
                   )
                   
                 )
-        )
+        ),
+      tabItem(tabName = "Saved",
+              h1("Saved applications")
+              ),
+      tabItem(tabName = "Applied",
+              h1("Jobs Applied")
+              )
       ),
       fluidRow(
         box(
         title="Analyst Intern, Analytics",status="warning",solidHeader=TRUE,
         "Full-time job $1000",
-        br(), "Industry: Delivery", br(), "Skills: Python",
+        br(), "Industry: Delivery", br(), "Skills: Python", width = 3,
         fluidRow(
           gaugeOutput("gauge1"),
-          box(
-            title = actionLink("titleId", "Update", icon = icon("refresh")), 
-            width = 4, solidHeader = TRUE, status = "primary",
-            uiOutput("boxContentUI")
+          box(actionButton("button1", label="Save", icon = icon("save")),
+              uiOutput("but1")),
+          box(actionButton("applybutton1", label="Apply", icon = icon("th")),
+              uiOutput("applybut1"))
           )
         ),
-        width=4
-        ),
-        
-        
         box(
           title="Analyst Intern, Analytics",status="warning",solidHeader=TRUE,
           "Full-time job $1000",
-          br(), "Industry: Delivery", br(), "Skills: Python",
+          br(), "Industry: Delivery", br(), "Skills: Python", width = 3,
           # title = p("Title 1", 
           #           actionButton("titleBtId", "", icon = icon("refresh"),
           #                        class = "btn-xs", title = "Update"),
           fluidRow(
-            gaugeOutput("gauge2")
-          ),
-          width=4
+            gaugeOutput("gauge2"),
+            box(actionButton("button2", label="Save", icon = icon("save")),
+                uiOutput("but2")),
+            box(actionButton("applybutton2", label="Apply", icon = icon("th")),
+                uiOutput("applybut2"))
+          )
+          #width=3
         ),
         
         box(
           title="Anlayst Intern, Analytics",status="warning",solidHeader=TRUE,
           "Full-time job $1000",
-          br(), "Industry: Delivery", br(), "Skills: Python",
+          br(), "Industry: Delivery", br(), "Skills: Python", width = 3,
           fluidRow(
-           gaugeOutput("gauge3")
-          ),
-          width=4
+           gaugeOutput("gauge3"),
+           box(actionButton("button3", label="Save", icon = icon("save")),
+               uiOutput("but3")),
+           box(actionButton("applybutton3", label="Apply", icon = icon("th")),
+               uiOutput("applybut3"))
+          )
+          #width=3
+        ),
+      
+        box(
+          title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
+                    actionButton("titleBtId", "", icon = icon("refresh"),
+                                 class = "btn-xs", title = "Update",
+                                 onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
+          width = 3, solidHeader = TRUE, status = "warning",
+          uiOutput("boxContentUI2")
         )
       )
-        )
+      # tabItem(tabName = "Saved",
+      #         h1("Saved applications")),
+      # tabItem(tabName = "Applied",
+      #         h2("Jobs Applied"))
       )
-)
+    )
+  )
 
 
 filter1_page <- div(
@@ -342,9 +365,29 @@ server <- function(input, output, session) {
   })
   output$boxContentUI2 <- renderUI({
     input$titleBtId
-    pre(paste(sample(LETTERS,10), collapse = ", "))
-  })  
+  }) 
+  output$but1 <- renderUI({
+    input$button1
+  })
+  output$but2 <- renderUI({
+    input$button2
+  }) 
+  output$but3 <- renderUI({
+    input$button3
+  }) 
+  output$applybut1 <- renderUI({
+    input$applybutton1
+  })
+  output$applybut2 <- renderUI({
+    input$applybutton2
+  }) 
+  output$applybut3 <- renderUI({
+    input$applybutton3
+  }) 
+  
+
 }
+
 
 
 
