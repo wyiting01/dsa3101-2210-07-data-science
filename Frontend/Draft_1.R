@@ -25,7 +25,148 @@ pageButtonUi <- function(id) {
 }
 
 #shinyServer(function(input, output, session) {
+filter1_page <- div(
+  ui <-  fluidPage(
+    br(),
+    fluidRow(
+    ),
+    fluidRow(
+      setBackgroundImage(
+        src = "https://source.unsplash.com/Q1p7bh3SHj8/4069x2010"  #https://source.unsplash.com/Q1p7bh3SHj8/4069x2010
+      ),
+      fluidRow(
+        column(8, align="center", offset = 2,
+               hr(),
+               div(id = 'filter1',(textInput("filter1", label = "Which Location would you like to work in?")),
+                   tags$style(type="text/css", "#filter1 {color : white;font-size:20px;}"),
+                   actionButton("east", label="East"),
+                   actionButton("north", label="North"),
+                   actionButton("south", label="South"),
+                   actionButton("west", label="West"),
+                   actionButton("northeast", label="NorthEast"),
+                   actionButton("southeast", label="Southeast"),
+                   actionButton("northwest", label="Northwest"),
+                   actionButton("southwest", label="Southwest")
+               )))),
+    fluidRow(
+      column(8, align = "right", offset = 2,
+             hr(),
+             div(id = 'next_page1',
+                 actionButton("skip", label="Skip"),
+                 actionButton("next", label="Next")))
+    )))
+filter2_page <- div(
+  ui <-  fluidPage(
+    br(),
+    fluidRow(
+    ),
+    fluidRow(
+      column(8, align="center", offset = 2,
+             hr(),
+             div(id = 'filter2',(textInput("filter2", label = "Which Industry would you like to work in?")),
+                 tags$style(type="text/css", "#filter2 {color : white; font-size:20px;}" ),
+                 actionButton("Finance", label="Finance"),
+                 actionButton("media", label="Media"),
+                 actionButton("healthcare", label="Healthcare"),
+                 actionButton("retail", label="Retail"),
+                 actionButton("telecommunications", label="Telecommunications"),
+                 actionButton("automotive", label="Automotive"),
+                 actionButton("digitalmarketing", label="Digital Marketing"),
+                 actionButton("professional_services", label="Professional services"),
+                 actionButton("cyber_security", label="Cyber Security"),
+                 actionButton("mining", label="Mining"),
+                 actionButton("Government", label="Government"),
+                 actionButton("manufacturing", label="Manufacturing"),
+                 actionButton("transport", label="transport")
+             ))),
+    fluidRow(
+      column(8, align = "right", offset = 2,
+             hr(),
+             div(id = 'next_page1',
+                 actionButton("skip", label="Skip"),
+                 actionButton("next", label="Next")))
+    )
+  ))
 
+filter3_page <- div(
+  ui <-  fluidPage(
+    br(),
+    fluidRow(
+    ),
+    fluidRow(
+      column(8, align="center", offset = 2,
+             hr(),
+             div(id = 'filter3',(textInput("filter3", label = "What Skills do you possess?")),
+                 tags$style(type="text/css", "#filter3 {color : white; font-size:20px;}"),
+                 actionButton("python", label="Python"),
+                 actionButton("R", label="R programming"),
+                 actionButton("Java", label="Java"),
+                 actionButton("SQL", label="SQL"),
+                 actionButton("C++", label="C++"),
+                 actionButton("Interpersonal skills", label="Interpersonal skills"),
+                 actionButton("Machine learning", label="Machine learning"),
+                 actionButton("deep learning", label="Deep learning"),
+                 actionButton("Data visualisation", label="Data visualisation"),
+                 actionButton("Data wrangling", label="Data wrangling"),
+                 actionButton("Software engineering", label="Software engineering"),
+                 actionButton("modelling", label="Modelling")
+             ))),
+    fluidRow(
+      column(8, align = "right", offset = 2,
+             hr(),
+             div(id = 'next_page1',
+                 actionButton("skip", label="Skip"),
+                 actionButton("next", label="Next")))
+    )
+  ))
+
+filter4_page <- div(
+  ui <-  fluidPage(
+    br(),
+    fluidRow(
+    ),
+    fluidRow(
+      column(8, align="center", offset = 2,
+             hr(),
+             div(id = 'filter4',textInput("filter4", label = "What Job Type are you looking for?")),
+             tags$style(type="text/css", "#filter4 {color : white; font-size:20px;}"),
+             actionButton("fulltime", label="Full time"),
+             actionButton("Parttime", label="Part time"),
+             actionButton("Intern", label="Intern")
+      ))),
+  fluidRow(
+    column(8, align = "right", offset = 2,
+           hr(),
+           div(id = 'next_page1',
+               actionButton("skip", label="Skip"),
+               actionButton("next", label="Next")))
+  )
+)
+
+
+filter5_page <- div(
+  ui <-  fluidPage(
+    br(),
+    fluidRow(
+    ),
+    fluidRow(
+      column(8, align="center", offset = 2,
+             hr(),
+             div(id = 'integer',
+                 sliderInput("integer", "What is your Expected Salary per month?:",
+                             min = 0, max = 10000,
+                             value = 0, step = 500),
+                 tags$style(type="text/css", "#integer {color : white; font-size:20px;}")))
+    ),
+    fluidRow(
+      column(8, align = "right", offset = 2,
+             hr(),
+             div(id = 'next_page1',
+                 actionButton("skip", label="Skip"),
+                 actionButton("next", label="Next")))
+    )
+  )
+)
 home_page <- div(
   ui <- dashboardPage(
     dashboardHeader(title = "Data Scientist Hunt"),
@@ -158,165 +299,24 @@ home_page <- div(
   )
 
 
-filter1_page <- div(
-  ui <-  fluidPage(
-    br(),
-    fluidRow(
-    ),
-    fluidRow(
-      setBackgroundImage(
-        src = "https://source.unsplash.com/Q1p7bh3SHj8/4069x2010"  #https://source.unsplash.com/Q1p7bh3SHj8/4069x2010
-      ),
-      fluidRow(
-        column(8, align="center", offset = 2,
-               hr(),
-               div(id = 'filter1',(textInput("filter1", label = "Which Location would you like to work in?")),
-                   tags$style(type="text/css", "#filter1 {color : white;font-size:20px;}"),
-                   actionButton("east", label="East"),
-                   actionButton("north", label="North"),
-                   actionButton("south", label="South"),
-                   actionButton("west", label="West"),
-                   actionButton("northeast", label="NorthEast"),
-                   actionButton("southeast", label="Southeast"),
-                   actionButton("northwest", label="Northwest"),
-                   actionButton("southwest", label="Southwest")
-               )))),
-    fluidRow(
-      column(8, align = "right", offset = 2,
-             hr(),
-             div(id = 'next_page1',
-                 actionButton("skip", label="Skip"),
-                 actionButton("next", label="Next")))
-    )))
-filter2_page <- div(
-  ui <-  fluidPage(
-    br(),
-    fluidRow(
-    ),
-    fluidRow(
-      column(8, align="center", offset = 2,
-             hr(),
-             div(id = 'filter2',(textInput("filter2", label = "Which Industry would you like to work in?")),
-                 tags$style(type="text/css", "#filter2 {color : white; font-size:20px;}" ),
-                 actionButton("Finance", label="Finance"),
-                 actionButton("media", label="Media"),
-                 actionButton("healthcare", label="Healthcare"),
-                 actionButton("retail", label="Retail"),
-                 actionButton("telecommunications", label="Telecommunications"),
-                 actionButton("automotive", label="Automotive"),
-                 actionButton("digitalmarketing", label="Digital Marketing"),
-                 actionButton("professional_services", label="Professional services"),
-                 actionButton("cyber_security", label="Cyber Security"),
-                 actionButton("mining", label="Mining"),
-                 actionButton("Government", label="Government"),
-                 actionButton("manufacturing", label="Manufacturing"),
-                 actionButton("transport", label="transport")
-             ))),
-    fluidRow(
-      column(8, align = "right", offset = 2,
-             hr(),
-             div(id = 'next_page1',
-                 actionButton("skip", label="Skip"),
-                 actionButton("next", label="Next")))
-    )
-  ))
 
-filter3_page <- div(
-  ui <-  fluidPage(
-    br(),
-    fluidRow(
-    ),
-    fluidRow(
-      column(8, align="center", offset = 2,
-             hr(),
-             div(id = 'filter3',(textInput("filter3", label = "What Skills do you possess?")),
-                 tags$style(type="text/css", "#filter3 {color : white; font-size:20px;}"),
-                 actionButton("python", label="Python"),
-                 actionButton("R", label="R programming"),
-                 actionButton("Java", label="Java"),
-                 actionButton("SQL", label="SQL"),
-                 actionButton("C++", label="C++"),
-                 actionButton("Interpersonal skills", label="Interpersonal skills"),
-                 actionButton("Machine learning", label="Machine learning"),
-                 actionButton("deep learning", label="Deep learning"),
-                 actionButton("Data visualisation", label="Data visualisation"),
-                 actionButton("Data wrangling", label="Data wrangling"),
-                 actionButton("Software engineering", label="Software engineering"),
-                 actionButton("modelling", label="Modelling")
-             ))),
-    fluidRow(
-      column(8, align = "right", offset = 2,
-             hr(),
-             div(id = 'next_page1',
-                 actionButton("skip", label="Skip"),
-                 actionButton("next", label="Next")))
-    )
-  ))
-
-filter4_page <- div(
-  ui <-  fluidPage(
-    br(),
-    fluidRow(
-    ),
-    fluidRow(
-      column(8, align="center", offset = 2,
-             hr(),
-             div(id = 'filter4',textInput("filter4", label = "What Job Type are you looking for?")),
-             tags$style(type="text/css", "#filter4 {color : white; font-size:20px;}"),
-             actionButton("fulltime", label="Full time"),
-             actionButton("Parttime", label="Part time"),
-             actionButton("Intern", label="Intern")
-      ))),
-  fluidRow(
-    column(8, align = "right", offset = 2,
-           hr(),
-           div(id = 'next_page1',
-               actionButton("skip", label="Skip"),
-               actionButton("next", label="Next")))
-  )
-  )
-
-
-filter5_page <- div(
-  ui <-  fluidPage(
-    br(),
-    fluidRow(
-    ),
-    fluidRow(
-      column(8, align="center", offset = 2,
-             hr(),
-             div(id = 'integer',
-                 sliderInput("integer", "What is your Expected Salary per month?:",
-                             min = 0, max = 10000,
-                             value = 0, step = 500),
-                 tags$style(type="text/css", "#integer {color : white; font-size:20px;}")))
-    ),
-    fluidRow(
-      column(8, align = "right", offset = 2,
-             hr(),
-             div(id = 'next_page1',
-                 actionButton("skip", label="Skip"),
-                 actionButton("next", label="Next")))
-    )
-  )
-)
 
 router <- make_router(
-  route("/", home_page),
   route("filter1", filter1_page),
   route("filter2", filter2_page),
   route("filter3", filter3_page),
   route("filter4", filter4_page),
-  route("filter5", filter5_page)
+  route("filter5", filter5_page),
+  route("Dashboard", home_page)
 )
 ui <- fluidPage(
   tags$ul(
-    tags$li(a(href = route_link("/"), "Dashboard")),
     tags$li(a(href = route_link("filter1"), "filter1")),
     tags$li(a(href = route_link("filter2"), "filter2")),
     tags$li(a(href = route_link("filter3"), "filter3")),
     tags$li(a(href = route_link("filter4"), "filter4")),
-    tags$li(a(href = route_link("filter5"), "filter5"))
+    tags$li(a(href = route_link("filter5"), "filter5")),
+    tags$li(a(href = route_link("Dashboard"), "Dashboard"))
   ),
   router$ui
 )
