@@ -6,13 +6,13 @@
 # http://shiny.rstudio.com
 #
 # Developed with R version 3.3.2 (64-bit)
-library(dplyr)
-library(stringr)
+library(shiny)
+library(shiny.router)
+library(shinydashboard)
+library(shinyWidgets)
 library(png)
-library(shinyjs)
-library(DT)
-library(visNetwork)
-library(rintrojs)
+library(flexdashboard)
+
 
 ui <- fluidPage(
     br(),
