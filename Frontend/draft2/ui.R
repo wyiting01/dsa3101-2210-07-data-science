@@ -63,25 +63,44 @@ panel_div <- function(class_type, content) {
     h6("Powered by:"),
     tags$img(src='logo-removebg-preview.png', height=120, width=200),
     br(),
-    dashboardHeader(title = "Data Scientist Hunt"),
     fluidRow(
       column(8, align = 'right' ,offset = 2,
              hr(),
              div(id = 'skip button',
                  actionButton("skip", label="Skip to home page")))
     ),
+    fluidRow(
+      style = "height:50px;"),
+    
     # WHAT
     fluidRow(
       column(3),
       column(6,
-             shiny::HTML("<br><br><center> <h1>What you'll find here</h1> </center><br>"),
-             shiny::HTML(
-             "<h5>An interactive tool to help you explore the paths to take as a Data Scientist. With information about the 
-                                                  similarity scores generated specially for you based on your filters, tips and tricks on how to pass a job interview, and more, you can 
-                                                   build your own path based on what is meaningful to you.</h5>")
+             div(id = 'introheader',(p("What you'll find here"))),
+                 tags$style(type="text/css", "#introheader {text-align: center;color : white;font-size:40px;font-weight : bold}"),
+
+             
       ),
       column(3)
     ),
+    
+    fluidRow(
+      style = "height:50px;"),
+    
+    
+    fluidRow(
+      column(3),
+      column(6,
+             div(id = 'introbody',(p("An interactive tool to help you explore the paths to take as a Data Scientist. With information about the 
+                                                  similarity scores generated specially for you based on your filters, tips and tricks on how to pass a job interview, and more, you can 
+                                                   build your own path based on what is meaningful to you"))),
+             tags$style(type="text/css", "#introbody {text-align: center;color : white;font-size:20px}")
+             
+             
+      ),
+      column(3)
+    ),
+    
     fluidRow(
       setBackgroundImage(
         src = "https://source.unsplash.com/Q1p7bh3SHj8/4069x2010"  #https://source.unsplash.com/Q1p7bh3SHj8/4069x2010
