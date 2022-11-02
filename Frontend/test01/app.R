@@ -1,12 +1,11 @@
 #
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
+# This is a Shiny web application. You can run the application by clicking
+# the 'Run App' button above.
 #
 # Find out more about building applications with Shiny here:
 #
 #    http://shiny.rstudio.com/
 #
-
 
 library(shiny)
 library(shiny.router)
@@ -29,20 +28,26 @@ panel_div <- function(class_type, content) {
   )
 }
 
-  ui <- shinyUI(navbarPage(
-    # tabPanel("HOME", value = "home",
-    #           tags$head(tags$script(HTML(
-    #             'var fakeClick = function(tabName) {
-    #               var dropdownList = document.getElementsByTagName("a");
-    #               for (var i = 0; i < dropdownList.length; i++) {
-    #                 var link = dropdownList[i];
-    #                 if(link.getAttribute("data-value") == tabName) {
-    #                   link.click();
-    #                     };
-    #                 }
-    #               };
-    #                                     '))),
-      fluidPage(
+ui <- shinyUI(navbarPage(
+  tabPanel("HOME", value = "home",
+            shinyjs::useShinyjs(),
+            onclick="fakeClick('HOME')",
+            tags$head(tags$script(HTML(
+              'var fakeClick = function(tabName, anchorName) {
+                var dropdownList = document.getElementsByTagName("a");
+                for (var i = 0; i < dropdownList.length; i++) {
+                  var link = dropdownList[i];
+                  if(link.getAttribute("data-value") == tabName) {
+                    link.click();
+                    document.getElementById(anchorName).scrollIntoView({
+                                behavior: "smooth"
+                                });
+                      };
+                  }
+                };
+                                      '))),
+    
+    fluidPage(
       h6("Powered by:"),
       tags$img(src='logo-removebg-preview.png', height=120, width=220),
       br(),
@@ -60,8 +65,8 @@ panel_div <- function(class_type, content) {
         column(3),
         column(6,
                div(id = 'introheader',(p("DataDreams"))),
-                   tags$style(type="text/css", "#introheader {text-align: center;color : white;font-size:40px;font-weight : bold}"),
-  
+               tags$style(type="text/css", "#introheader {text-align: center;color : white;font-size:40px;font-weight : bold}"),
+               
                
         ),
         column(3)
@@ -75,8 +80,8 @@ panel_div <- function(class_type, content) {
         column(3),
         column(6,
                div(id = 'introbody',(p("An interactive tool to help you explore the paths to take as a Data Scientist. With information about the 
-                                                    similarity scores generated specially for you based on your filters, tips and tricks on how to pass a job interview, and more, you can 
-                                                     build your own path based on what is meaningful to you"))),
+                                                      similarity scores generated specially for you based on your filters, tips and tricks on how to pass a job interview, and more, you can 
+                                                       build your own path based on what is meaningful to you"))),
                tags$style(type="text/css", "#introbody {text-align: center;color : white;font-size:20px}")
                
                
@@ -184,7 +189,54 @@ panel_div <- function(class_type, content) {
                hr(),
                div(id = 'search1',
                    actionButton("search", label="Search")))
+      ),
+      fluidRow(
+        column(3),
+        column(6,
+               tags$div(align = "center", 
+                        tags$a("Start", 
+                               onclick="fakeClick('careerPF')", 
+                               class="btn btn-primary btn-lg"))))
+  )
+  ),
+  tabPanel("CAREER PATHFINDER", value = "careerPF",
+           # tags$div(
+           #   style = "height:50px;",
+           #   
+           #   uiOutput("printInput1"),
+           #   uiOutput("printInput2"),
+           #   uiOutput("printInput3"),
+           #   uiOutput("printInput4"),
+           #   uiOutput("printInput5")
+           # )
+           )
+))
+
+# Define server logic required to draw a histogram
+server <- {
+  function(input, output, session) {
+    output$out1 <- renderPrint(input$in1)
+    output$out2 <- renderPrint(input$in2)
+    output$out3 <- renderPrint(input$in3)
+    output$out4 <- renderPrint(input$in4)
+    output$out5 <- renderPrint(input$in5)
+    # Navbar ------------------------------------------------------------------
+    shinyjs::addClass(id = "navBar", class = "navbar-right")
+    
+    # DT Options --------------------------------------------------------------
+    options(DT.options = list( lengthMenu = c(10, 20),
+    dom = 'tl'))
+    observeEvent(input$startBtn, {
+      updateNavbarPage(session, "navBar",
+                       selected = "careerPF"
       )
-    )
-    # )
-  ))
+    })
+    
+  }
+  
+  
+}
+
+shinyApp(ui, server)
+# Run the application 
+shinyApp(ui = ui, server = server)

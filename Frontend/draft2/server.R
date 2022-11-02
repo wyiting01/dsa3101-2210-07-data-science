@@ -18,12 +18,15 @@ server <- {
     output$out4 <- renderPrint(input$in4)
     output$out5 <- renderPrint(input$in5)
     # Navbar ------------------------------------------------------------------
-    shinyjs::addClass(id = "navBar", class = "navbar-right")
+    # shinyjs::addClass(id = "navBar", class = "navbar-right")
     
     # DT Options --------------------------------------------------------------
-    options(DT.options = list( lengthMenu = c(10, 20),
-                               dom = 'tl'
-    ))  
+    # options(DT.options = list( lengthMenu = c(10, 20),
+    # dom = 'tl'))
   }
   
 }
+
+shinyApp(ui, server)
+# Run the application 
+shinyApp(ui = ui, server = server)
