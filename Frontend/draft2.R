@@ -21,7 +21,10 @@ library(shinyjs)
 library(DT)
 library(visNetwork)
 library(rintrojs)
-
+Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
+industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Automotive','Digital Marketing', 'Professional Services','Cyber Security', 'Mining','Government','Manufacturing','Transport')
+skills <- c('Python','R programming', 'Java', 'SQL', 'C++', 'C', 'Interpersonal skills', 'Machine Learning', 'Deep Learning', 'Data Visualisation', 'Data wrangling')
+jobtype <- c('Full time', 'Full time', 'Internship')
 
 panel_div <- function(class_type, content) {
     div(class = sprintf("panel panel-%s", class_type),
@@ -29,7 +32,17 @@ panel_div <- function(class_type, content) {
     )
 }
 
-ui <- shinyUI(navbarPage(
+ui <- shinyUI(navbarPage(title = img(src="logo-removebg-preview.png'", height = "1200px"), id = "navBar",
+                theme = "paper.css",
+                collapsible = TRUE,
+                inverse = TRUE,
+                windowTitle = "Data Dreams",
+                position = "fixed-top",
+                header = tags$style(
+                    ".navbar-right {
+                       float: right !important;
+                       }",
+                    "body {padding-top: 75px;}"),
     # tabPanel("HOME", value = "home",
     #           tags$head(tags$script(HTML(
     #             'var fakeClick = function(tabName) {
@@ -42,16 +55,31 @@ ui <- shinyUI(navbarPage(
     #                 }
     #               };
     #                                     '))),
-    fluidPage(
-        h6("Powered by:"),
-        tags$img(src='logo-removebg-preview.png', height=120, width=220),
-        br(),
-        fluidRow(
-            column(8, align = 'right' ,offset = 2,
-                   hr(),
-                   div(id = 'skip button',
-                       actionButton("skip", label="Skip to home page")))
-        ),
+    tabPanel("FORM", value = "form",
+             
+             shinyjs::useShinyjs(),
+             
+             tags$head(tags$script(HTML('
+                                       var fakeClick = function(tabName) {
+                                       var dropdownList = document.getElementsByTagName("a");
+                                       for (var i = 0; i < dropdownList.length; i++) {
+                                       var link = dropdownList[i];
+                                       if(link.getAttribute("data-value") == tabName) {
+                                       link.click();
+                                       };
+                                       }
+                                       };
+                                       '))),
+             fluidRow(
+                 column(3),
+                 column(6,
+                        tags$div(align = "right", 
+                                 tags$a("Skip to home page", 
+                                        onclick="fakeClick('home')", 
+                                        class="btn btn-primary btn-lg",
+                                        style="width:150 ;height: 50;"))
+                        )
+                 ),
         fluidRow(
             style = "height:50px;"),
         
@@ -60,7 +88,7 @@ ui <- shinyUI(navbarPage(
             column(3),
             column(6,
                    div(id = 'introheader',(p("DataDreams"))),
-                   tags$style(type="text/css", "#introheader {text-align: center;color : white;font-size:40px;font-weight : bold}"),
+                   tags$style(type="text/css", "#introheader {text-align: center;color : white;font-size:40px;font-weight : bold}")
                    
                    
             ),
@@ -178,17 +206,145 @@ ui <- shinyUI(navbarPage(
         fluidRow(
             
             style = "height:150px;"),
-        
         fluidRow(
-            column(8, align = "right", offset = 2,
-                   hr(),
-                   div(id = 'search1',
-                       actionButton("search", label="Search")))
+            column(3),
+            column(6,
+                   tags$div(align = "right", 
+                            tags$a("Search", 
+                                   onclick="fakeClick('home')", 
+                                   class="btn btn-primary btn-lg",
+                                   style="width:150 ;height: 50;"))
+            )
+        )),
+tabPanel("HOME", value = "home",
+         dashboardPage(        
+dashboardHeader(title = "Data Scientist Hunt"),
+dashboardSidebar(
+    sidebarMenu(
+        menuItem("Search", tabName = "Search", icon = icon("search")),
+        menuItem("Saved", tabName = "Saved", icon = icon("save")),
+        menuItem("Applied", tabName = "Applied", icon = icon("thumbs-up"))
+    )
+),
+dashboardBody(
+    
+    tabItems(
+        tabItem("Search",
+                fluidPage(
+                    br(),
+                    fluidRow(),
+                    ui <- navbarPage(fluid = TRUE, title = "GetHired",
+                                     tabPanel( value= "search_panel",
+                                               textInput("search", label=NULL, value="Find jobs"
+                                               )),
+                                     
+                                     tabPanel("Jobs",
+                                              h4("This page lists saved jobs?")),
+                                     tabPanel("Career Guide",
+                                              h4("This page has resume support etc.")),
+                                     tabPanel("Learn!",
+                                              h4("This page has technical test and courses")),
+                                     tabPanel("My Profile",
+                                              h4("This page contains user profile"))
+                                     
+                    ),
+                    fluidRow(
+                        column(4,
+                               hr(),
+                               sliderInput(inputId = "Salary", label = "Expected Salary:",
+                                           min = 0, max = 10000,
+                                           value = 0, step = 500)),
+                        column(4,
+                               hr(),
+                               selectInput(inputId = 'Industry', label='Industry', c(Choose='', industry), selectize=FALSE)
+                        ),
+                        column(4,
+                               hr(),
+                               selectInput(inputId = 'Location', label = 'Location', c(Choose='', Location),selectize=FALSE)
+                        )
+                    ),
+                    fluidRow(
+                        column(4,
+                               hr(),
+                               selectInput(inputId = 'Type', label = 'Job type', c(Choose='', jobtype),selectize=FALSE)
+                        ),
+                        column(4,
+                               hr(),
+                               selectInput(inputId = 'Skills', label = 'Skills', c(Choose='', skills), selectize=FALSE)
+                        ),
+                        column(4,
+                               hr(),
+                               actionButton("search", label = "Search", width = '250px'))
+                    )
+                    
+                )
+        ),
+        tabItem(tabName = "Saved",
+                h1("Saved applications")
+        ),
+        tabItem(tabName = "Applied",
+                h1("Jobs Applied")
+        )
+    ),
+    fluidRow(
+        box(
+            title="Analyst Intern, Analytics",status="warning",solidHeader=TRUE,
+            "Full-time job $1000",
+            br(), "Industry: Delivery", br(), "Skills: Python", width = 3,
+            fluidRow(
+                gaugeOutput("gauge1"),
+                box(actionButton("button1", label="Save", icon = icon("save")),
+                    uiOutput("but1")),
+                box(actionButton("applybutton1", label="Apply", icon = icon("th")),
+                    uiOutput("applybut1"))
+            )
+        ),
+        box(
+            title="Analyst Intern, Analytics",status="warning",solidHeader=TRUE,
+            "Full-time job $1000",
+            br(), "Industry: Delivery", br(), "Skills: Python", width = 3,
+            # title = p("Title 1", 
+            #           actionButton("titleBtId", "", icon = icon("refresh"),
+            #                        class = "btn-xs", title = "Update"),
+            fluidRow(
+                gaugeOutput("gauge2"),
+                box(actionButton("button2", label="Save", icon = icon("save")),
+                    uiOutput("but2")),
+                box(actionButton("applybutton2", label="Apply", icon = icon("th")),
+                    uiOutput("applybut2"))
+            )
+            #width=3
+        ),
+        
+        box(
+            title="Anlayst Intern, Analytics",status="warning",solidHeader=TRUE,
+            "Full-time job $1000",
+            br(), "Industry: Delivery", br(), "Skills: Python", width = 3,
+            fluidRow(
+                gaugeOutput("gauge3"),
+                box(actionButton("button3", label="Save", icon = icon("save")),
+                    uiOutput("but3")),
+                box(actionButton("applybutton3", label="Apply", icon = icon("th")),
+                    uiOutput("applybut3"))
+            )
+            #width=3
+        ),
+        
+        box(
+            title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
+            actionButton("titleBtId", "", icon = icon("refresh"),
+                         class = "btn-xs", title = "Update",
+                         onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
+            width = 3, solidHeader = TRUE, status = "warning",
+            uiOutput("boxContentUI2")
         )
     )
-    # )
+    
+)
 ))
-# Define server logic required to draw a histogram
+))
+
+# Define server logic required to daw a histogram
 server <- function(input, output) {
     server <- {
         function(input, output, session) {
