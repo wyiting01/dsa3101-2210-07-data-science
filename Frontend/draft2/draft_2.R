@@ -32,7 +32,7 @@ panel_div <- function(class_type, content) {
     )
 }
 
-ui <- shinyUI(navbarPage(title = img(src="logo-removebg-preview.png'", height = "1200px"), id = "navBar",
+ui <- shinyUI(navbarPage(title = tags$img(src="logo-removebg-preview.png", height = "120px", width = "200px"), id = "navBar",
                 theme = "paper.css",
                 collapsible = TRUE,
                 inverse = TRUE,
