@@ -151,11 +151,16 @@ home_page <- div(
 )
 
 server <- function(input, output, session) {
+<<<<<<< HEAD
   json_data  <- reactive({
     url = "http://localhost:5000"
+=======
+  user_input  <- reactive({
+    #url = "http://localhost:5000"
+>>>>>>> b361f95892a22e7a7cd1cc8cd3a9b19ee7e3ae84
     toJSON(
       list(
-        expected_alary = input$Salary,
+        expected_salary = input$Salary,
         industry = input$Industry,
         location = input$Location,
         expected_hours = input$Type,
@@ -164,6 +169,10 @@ server <- function(input, output, session) {
       ),
       pretty = TRUE
     )})
+  observeEvent(input$search, {
+    x <- POST("http://127.0.0.1:5000/recommendation", body = user_input, encode = 'json')
+    #content(x)
+  })
   
   output$jsonview <- renderPrint({
     req(json_data())
