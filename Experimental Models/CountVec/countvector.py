@@ -52,7 +52,10 @@ def clean_txt(text):
 
 from sklearn.feature_extraction.text import CountVectorizer
 count_vectorizer = CountVectorizer()
+<<<<<<< HEAD
 ##count_vectorizer.get_feature_names_out()
+=======
+>>>>>>> b361f95892a22e7a7cd1cc8cd3a9b19ee7e3ae84
 
 #fitting and transforming the vector
 count_job = count_vectorizer.fit_transform((df['full_info_tokens']))

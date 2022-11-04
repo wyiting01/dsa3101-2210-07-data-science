@@ -1,0 +1,14 @@
+FROM rocker/shiny:1.7.2
+WORKDIR /Frontend
+RUN apt-get update \
+    && apt-get install -y libsasl2-dev libssl-dev
+RUN echo \
+  'options(repos=list(CRAN="https://cloud.r-project.org/"))' > \
+  ".Rprofile"
+RUN R -e "install.packages(c('dplyr','tidyr', 'plotly','shiny','shiny.dashboard', 'shinyWidgets', 'png','flexdashboard', 'jsonlite'))"
+ADD https://raw.githubusercontent.com/rocker-org/shiny/master/shiny-server.sh /usr/bin/
+COPY ./ ./
+EXPOSE 3838
+RUN chmod a+w .
+RUN chmod +x /usr/bin/shiny-server.sh
+CMD /usr/bin/shiny-server.sh
