@@ -152,7 +152,7 @@ home_page <- div(
 
 server <- function(input, output, session) {
   json_data  <- reactive({
-    url = "http://localhost:5001"
+    url = "http://localhost:5000"
     toJSON(
       list(
         expected_alary = input$Salary,

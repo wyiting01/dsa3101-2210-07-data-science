@@ -218,7 +218,7 @@ ui <- shinyUI(navbarPage(title = tags$img(src="logo-removebg-preview.png", heigh
         )),
 tabPanel("HOME", value = "home",
          dashboardPage(        
-dashboardHeader(title = "Data Scientist Hunt"),
+dashboardHeader(title = tags$img(src="logo-removebg-preview.png", height = "60px", width = "150px")),
 dashboardSidebar(
     sidebarMenu(
         menuItem("Search", tabName = "Search", icon = icon("search")),
