@@ -152,8 +152,13 @@ home_page <- div(
 
 server <- function(input, output, session) {
 <<<<<<< HEAD
+<<<<<<< HEAD
   json_data  <- reactive({
     url = "http://localhost:5000"
+=======
+  user_input  <- reactive({
+    #url = "http://localhost:5000"
+>>>>>>> b361f95892a22e7a7cd1cc8cd3a9b19ee7e3ae84
 =======
   user_input  <- reactive({
     #url = "http://localhost:5000"
