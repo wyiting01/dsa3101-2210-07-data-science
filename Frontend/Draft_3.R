@@ -14,6 +14,7 @@ library(shinyWidgets)
 library(png)
 library(flexdashboard)
 library(jsonlite)
+library(reticulate)
 
 
 Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
@@ -151,6 +152,7 @@ home_page <- div(
 
 server <- function(input, output, session) {
   json_data  <- reactive({
+    url = "http://localhost:5001"
     toJSON(
       list(
         expected_alary = input$Salary,
@@ -207,6 +209,7 @@ server <- function(input, output, session) {
           symbol = "%",
           label = "MATCH")
   })
+  url = 
   output$boxContentUI2 <- renderUI({
     input$titleBtId
   }) 
