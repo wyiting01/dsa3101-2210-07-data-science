@@ -25,7 +25,7 @@ RUN R -e "install.packages('dplyr', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('stringr', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('shinyjs', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('DT', repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('rintros', repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages('rintrojs', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('visNetwork', repos='http://cran.rstudio.com/')"
 
 # copy the app to the image
