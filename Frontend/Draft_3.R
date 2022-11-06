@@ -15,6 +15,7 @@ library(png)
 library(flexdashboard)
 library(jsonlite)
 library(reticulate)
+library(httr)
 
 
 Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
@@ -151,18 +152,9 @@ home_page <- div(
 )
 
 server <- function(input, output, session) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  json_data  <- reactive({
-    url = "http://localhost:5000"
-=======
+
   user_input  <- reactive({
     #url = "http://localhost:5000"
->>>>>>> b361f95892a22e7a7cd1cc8cd3a9b19ee7e3ae84
-=======
-  user_input  <- reactive({
-    #url = "http://localhost:5000"
->>>>>>> b361f95892a22e7a7cd1cc8cd3a9b19ee7e3ae84
     toJSON(
       list(
         expected_salary = input$Salary,
@@ -174,9 +166,13 @@ server <- function(input, output, session) {
       ),
       pretty = TRUE
     )})
-  observeEvent(input$search, {
+  
+  observeEvent(input$search,{
     x <- POST("http://127.0.0.1:5000/recommendation", body = user_input, encode = 'json')
-    #content(x)
+  })
+  
+  observeEvent(input$boxContentUI2,{
+    GET('http://127.0.0.1:5000/get_articles')
   })
   
   output$jsonview <- renderPrint({

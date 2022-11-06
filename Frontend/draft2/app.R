@@ -21,6 +21,30 @@ library(shinyjs)
 library(DT)
 library(visNetwork)
 library(rintrojs)
+
+get_recommendation<-function(input)
+{
+  user_input = list(
+    expected_salary= input$Salary,
+    expected_hours= input$Type,
+    job_title=input$Jobtitle,
+    location= input$Location,
+    industry= input$Industry,
+    skills= input$Skills
+    
+  )
+  
+  res <- httr::POST("http://127.0.0.1:5000/recommendation"
+                    , body = user_input
+                    , encode = "json")
+  appData <- httr::content(res,as="text",encoding = "UTF-8")
+  appData<-gsub("NaN","NA",appData)
+  appData<-RJSONIO::fromJSON(appData,nullValue=NA)
+  #appData<-do.call(rbind.data.frame, appData)
+  return(appData)
+  
+}
+
 Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
 industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Automotive','Digital Marketing', 'Professional Services','Cyber Security', 'Mining','Government','Manufacturing','Transport')
 skills <- c('Python','R programming', 'Java', 'SQL', 'C++', 'C', 'Interpersonal skills', 'Machine Learning', 'Deep Learning', 'Data Visualisation', 'Data wrangling')
@@ -43,18 +67,7 @@ ui <- shinyUI(navbarPage(title = tags$img(src="logo-removebg-preview.png", heigh
                        float: right !important;
                        }",
                     "body {padding-top: 75px;}"),
-    # tabPanel("HOME", value = "home",
-    #           tags$head(tags$script(HTML(
-    #             'var fakeClick = function(tabName) {
-    #               var dropdownList = document.getElementsByTagName("a");
-    #               for (var i = 0; i < dropdownList.length; i++) {
-    #                 var link = dropdownList[i];
-    #                 if(link.getAttribute("data-value") == tabName) {
-    #                   link.click();
-    #                     };
-    #                 }
-    #               };
-    #                                     '))),
+
     tabPanel("FORM", value = "form",
              
              shinyjs::useShinyjs(),
