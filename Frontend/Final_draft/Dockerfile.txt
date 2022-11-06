@@ -39,3 +39,6 @@ RUN sudo chown -R shiny:shiny /srv/shiny-server
 
 # run app
 CMD ["/usr/bin/shiny-server.sh"]
+
+#docker build -t my-shiny-app .
+#docker run --rm -p 3838:3838 my-shiny-app
