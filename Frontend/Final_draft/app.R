@@ -7,7 +7,8 @@
 #    http://shiny.rstudio.com/
 #
 
-
+library(jsonlite)
+library(httr)
 library(shiny)
 library(shiny.router)
 library(shinydashboard)
@@ -91,6 +92,8 @@ Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest',
 industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Automotive','Digital Marketing', 'Professional Services','Cyber Security', 'Mining','Government','Manufacturing','Transport')
 skills <- c('Python','R programming', 'Java', 'SQL', 'C++', 'C', 'Interpersonal skills', 'Machine Learning', 'Deep Learning', 'Data Visualisation', 'Data wrangling')
 jobtype <- c('Full time', 'Full time', 'Internship')
+#testing daily updates
+data1=toJSON('https://www.forbes.com/sites/bernardmarr/2022/10/31/the-top-5-data-science-and-analytics-trends-in-2023/?sh=2b3dab75c411')
 
 panel_div <- function(class_type, content) {
     div(class = sprintf("panel panel-%s", class_type),
@@ -274,7 +277,7 @@ ui <- shinyUI(navbarPage(title = tags$img(src="logo-removebg-preview.png", heigh
         )),
 tabPanel("HOME", value = "home",
          dashboardPage(        
-dashboardHeader(title = tags$img(src="logo-removebg-preview.png", height = "60px", width = "150px")),
+dashboardHeader(title = "DataDreams"),
 dashboardSidebar(
     sidebarMenu(
         menuItem("Search", tabName = "Search", icon = icon("search")),
@@ -295,7 +298,7 @@ dashboardBody(
                                                )),
                                      
                                      tabPanel("Jobs",
-                                              h4("This page lists saved jobs?")),
+                                              h4("This page lists saved jobs")),
                                      tabPanel("Career Guide",
                                               h4("This page has resume support etc.")),
                                      tabPanel("Learn!",
