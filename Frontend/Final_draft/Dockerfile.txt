@@ -29,6 +29,7 @@ RUN R -e "install.packages('visNetwork', repos='http://cran.rstudio.com/')"
 
 # copy the app to the image
 COPY app.R /srv/shiny-server/
+COPY www/logo-removebg-preview.png /srv/shiny-server/
 
 # select port
 EXPOSE 3838
