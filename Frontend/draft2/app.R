@@ -45,6 +45,21 @@ get_recommendation<-function(input)
   
 }
 
+add_click<-function(input)
+{
+  user_input = list(
+    url= input$url
+  )
+  res <- httr::POST("http://127.0.0.1:5000/add_click"
+                    , body = user_input
+                    , encode = "json")
+  appData <- httr::content(res,as="text",encoding = "UTF-8")
+  return(appData)
+  
+}
+
+
+
 update_rating<-function(input)
 {
   user_input = list(
