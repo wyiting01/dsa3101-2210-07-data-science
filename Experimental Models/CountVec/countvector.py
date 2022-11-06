@@ -18,11 +18,11 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 
 ##install all packages required from nltk
-#nltk.download('punkt')
-#nltk.download('stopwords')
-#nltk.download('wordnet')
-#nltk.download('averaged_perceptron_tagger')
-#nltk.download('omw-1.4')
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('omw-1.4')
 
 #read the csv
 df = pd.read_csv("../../Datasets/processed_data.csv")
@@ -52,6 +52,7 @@ def clean_txt(text):
 
 from sklearn.feature_extraction.text import CountVectorizer
 count_vectorizer = CountVectorizer()
+##count_vectorizer.get_feature_names_out()
 
 #fitting and transforming the vector
 count_job = count_vectorizer.fit_transform((df['full_info_tokens']))
@@ -74,5 +75,5 @@ def generate_recommendations(user_input):
     return df.iloc[top,:]
 
 xgtest = ["python","R","sql","git","flask","docker"]
-#test_input=["Computer Science","Information Technology","software development","project management","design document","Software product specifications","architectural styles"]
+test_input=["Computer Science","Information Technology","software development","project management","design document","Software product specifications","architectural styles"]
 #generate_recommendations(test_input)
