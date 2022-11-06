@@ -343,48 +343,7 @@ dashboardBody(
         )
     ),
     fluidRow(
-        box(
-            title="Analyst Intern, Analytics",status="warning",solidHeader=TRUE,
-            "Full-time job $1000",
-            br(), "Industry: Delivery", br(), "Skills: Python", width = 3,
-            fluidRow(
-                gaugeOutput("gauge1"),
-                box(actionButton("button1", label="Save", icon = icon("save")),
-                    uiOutput("but1")),
-                box(actionButton("applybutton1", label="Apply", icon = icon("th")),
-                    uiOutput("applybut1"))
-            )
-        ),
-        box(
-            title="Analyst Intern, Analytics",status="warning",solidHeader=TRUE,
-            "Full-time job $1000",
-            br(), "Industry: Delivery", br(), "Skills: Python", width = 3,
-            # title = p("Title 1", 
-            #           actionButton("titleBtId", "", icon = icon("refresh"),
-            #                        class = "btn-xs", title = "Update"),
-            fluidRow(
-                gaugeOutput("gauge2"),
-                box(actionButton("button2", label="Save", icon = icon("save")),
-                    uiOutput("but2")),
-                box(actionButton("applybutton2", label="Apply", icon = icon("th")),
-                    uiOutput("applybut2"))
-            )
-            #width=3
-        ),
-        
-        box(
-            title="Anlayst Intern, Analytics",status="warning",solidHeader=TRUE,
-            "Full-time job $1000",
-            br(), "Industry: Delivery", br(), "Skills: Python", width = 3,
-            fluidRow(
-                gaugeOutput("gauge3"),
-                box(actionButton("button3", label="Save", icon = icon("save")),
-                    uiOutput("but3")),
-                box(actionButton("applybutton3", label="Apply", icon = icon("th")),
-                    uiOutput("applybut3"))
-            )
-            #width=3
-        ),
+      dataTableOutput('ex4'),
         
         box(
             title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
@@ -395,30 +354,29 @@ dashboardBody(
             uiOutput("boxContentUI2")
         )
     )
-    
+), 
+sidebarPanel(
+  width=3
 )
 ))
 ))
 
 # Define server logic required to daw a histogram
 server <- function(input, output) {
-    server <- {
-        function(input, output, session) {
-            output$out1 <- renderPrint(input$in1)
-            output$out2 <- renderPrint(input$in2)
-            output$out3 <- renderPrint(input$in3)
-            output$out4 <- renderPrint(input$in4)
-            output$out5 <- renderPrint(input$in5)
-            # Navbar ------------------------------------------------------------------
-            # shinyjs::addClass(id = "navBar", class = "navbar-right")
-            
-            # DT Options --------------------------------------------------------------
-            # options(DT.options = list( lengthMenu = c(10, 20),
-            # dom = 'tl'))
-        }
-        
-    }
-}
+  
+  dta<-eventReactive(input$search,{
     
+    dta<-get_recommendation(input)
+    dta$relevant_skills<-NULL
+    nn<-names(dta)
+    dta<-as.data.frame(do.call(cbind, dta))
+    names(dta)<-nn
+    dta
+    
+  })
+  
+  output$ex4 <- renderDataTable(dta(), options = list(searching = FALSE, paging=FALSE))
+}
+
 shinyApp(ui, server)
 
