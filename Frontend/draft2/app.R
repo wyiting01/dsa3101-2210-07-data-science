@@ -58,6 +58,20 @@ add_click<-function(input)
   
 }
 
+get_articles<-function()
+{
+  res <- httr::GET('http://127.0.0.1:5000/get_articles')
+  appData <- httr::content(res)
+  return(appData)
+}
+
+get_rating<-function()
+{
+  res <- httr::GET('http://127.0.0.1:5000/get_rating')
+  appData <- httr::content(res)
+  return(appData)
+}
+
 
 
 update_rating<-function(input)
