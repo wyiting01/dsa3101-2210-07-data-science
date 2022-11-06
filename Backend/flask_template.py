@@ -83,7 +83,10 @@ def generate_recommendation():
     scores[underpay_ind] = 0
 
     #Index of top 10 recommended jobs
-    ind = np.argpartition(scores,-10)[-10:][::-1]
+    top_10_indexes = list(np.argpartition(scores,-10)[-10:][::-1])
+
+    #Sort the indexes by recommendation score
+    ind = sorted(top_10_indexes,key = lambda x: scores[x], reverse=True)
 
     #Return information requested by front-end team
     result_dict = {}
@@ -95,6 +98,7 @@ def generate_recommendation():
     result_dict['min_salary'] = list(df_combined['min_pay'][ind])
     result_dict['max_salary'] = list(df_combined['max_pay'][ind])
     result_dict['url'] = list(df_combined['url'][ind])
+    #Relevant skills are derived by looking for terms that appear both in the user's skills and the description of the job
     result_dict['relevant_skills'] = list(df_combined['description_clean'][ind].map(lambda x: [i for i in skills.split() if i.lower() in x.split()]))
     result_dict['similarity_scores'] = [float(i) for i in scores[ind]]
     result_dict['clicks'] = [clicks_dict[i] for i in ind]
