@@ -5,7 +5,7 @@
 <p> 2. Run the following command to build the image 'reco' <p>
 
 ```
-docker build . -t reco -f Dockerfile.txt
+docker build . -t reco 
 ```
 <p> 3. Run the following command to run the container 'reco_test' on port 5000 </p>
 

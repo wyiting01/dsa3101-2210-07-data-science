@@ -16,5 +16,5 @@ ENV FLASK_APP flask_template
 ENTRYPOINT [ "python", "-u", "-m", "flask", "run", "--host=0.0.0.0"]
 
 
-##docker build . -t reco -f Dockerfile.txt
+##docker build . -t reco 
 ##docker run --name reco_test -p5000:5000 -d reco
