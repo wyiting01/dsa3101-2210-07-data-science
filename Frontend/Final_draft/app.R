@@ -336,7 +336,7 @@ ui <- shinyUI(navbarPage(
                                                                                dataTableOutput('ex4'),
                                                                                
                                                                                box(
-                                                                                 title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
+                                                                                 title = "Weekly Updates", background = "black", "Catch this week's latest Data Science News!",
                                                                                  actionButton("titleBtId", "", icon = icon("refresh"),
                                                                                               class = "btn-xs", title = "Update",
                                                                                               onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
