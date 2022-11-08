@@ -10,10 +10,8 @@
 library(jsonlite)
 library(httr)
 library(shiny)
-library(shiny.router)
 library(shinydashboard)
 library(shinyWidgets)
-library(png)
 library(flexdashboard)
 library(dplyr)
 library(stringr)
@@ -330,25 +328,55 @@ ui <- shinyUI(navbarPage(
                                                                                       hr(),
                                                                                       actionButton("search", label = "Search", width = '250px')),
        
-                                                                             ),
-                                                                             br(),
-                                                                             fluidRow(
-                                                                               dataTableOutput('ex4'),
-                                                                               
-                                                                               box(
-                                                                                 title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
-                                                                                 actionButton("titleBtId", "", icon = icon("refresh"),
-                                                                                              class = "btn-xs", title = "Update",
-                                                                                              onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
-                                                                                 width = 3, solidHeader = TRUE, status = "warning",
-                                                                                 uiOutput("boxContentUI2")
-                                                                               )
                                                                              )),
+                                                                             #br(),
+                                                                             # fluidRow(
+                                                                             #   dataTableOutput('ex4'),
+                                                                             #   
+                                                                             #   box(
+                                                                             #     title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
+                                                                             #     actionButton("titleBtId", "", icon = icon("refresh"),
+                                                                             #                  class = "btn-xs", title = "Update",
+                                                                             #                  onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
+                                                                             #     width = 3, solidHeader = TRUE, status = "warning",
+                                                                             #     uiOutput("boxContentUI2")
+                                                                             #   )
+                                                                             # )),
                                                               
                                                                    tabPanel("Career Guide",
                                                                             h4("This page has resume support etc.")),
                                                                    tabPanel("Learn!",
-                                                                            h4("This page has technical test and courses")),
+                                                                            fluidRow(
+                                                                              box(
+                                                                              title = "Intro to R Programming",
+                                                                              width = 3,
+                                                                              height = 200,
+                                                                              img(src="john_hopkins_uni_logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
+                                                                              tags$a(href="https://www.coursera.org/learn/r-programming", "Link to the course")),
+                                                                              box(
+                                                                                title = "Applied Data Science with Python",
+                                                                                width = 3,
+                                                                                height = 200,
+                                                                                img(src="University-of-Michigan-Logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
+                                                                                tags$a(href="https://www.coursera.org/specializations/data-science-python", "Link to the course")),
+                                                                              box(
+                                                                                title = "Machine Learning",
+                                                                                width = 3,
+                                                                                height = 200,
+                                                                                img(src="Stanford-logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
+                                                                                tags$a(href="https://www.coursera.org/specializations/machine-learning-introduction", "Link to the course"))
+                                                                              ),
+                                                                            fluidRow(
+                                                                              box(
+                                                                                title = "Technical Test Practice",
+                                                                                width = 10,
+                                                                                height = 150,
+                                                                                actionButton(inputId = 'Easy', label ="easy", width = 280),
+                                                                                actionButton(inputId = 'Moderate', label ="moderate", width = 280),
+                                                                                actionButton(inputId = 'Hard', label ="hard" ,width = 280),
+                                                                              )
+                                                                            ))
+                                                                            ,
                                                                    tabPanel("My Profile",
                                                                             h4("This page contains user profile"), fileInput("file", "Upload Your Resume"))
                                                                    
