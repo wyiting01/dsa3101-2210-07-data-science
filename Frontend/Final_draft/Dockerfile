@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
 # install R packages required
 # (change it depending on the packages you need)
 RUN R -e "install.packages('shiny', repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages('httr', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('jsonlite', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('shiny.router', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('shinydashboard', repos='http://cran.rstudio.com/')"
@@ -34,7 +35,7 @@ RUN R -e "install.packages('visNetwork', repos='http://cran.rstudio.com/')"
 
 # copy the app to the image
 COPY app.R /srv/shiny-server/
-COPY www/logo-removebg-preview.png /srv/shiny-server/
+COPY www/logo.png /srv/shiny-server/
 
 # select port
 EXPOSE 3838
