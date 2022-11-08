@@ -2,6 +2,9 @@
 # get shiny serves plus tidyverse packages image
 FROM rocker/shiny-verse:latest
 
+# setting working directory 
+WORKDIR ~\
+
 # system libraries of general use
 RUN apt-get update && apt-get install -y \
     sudo \
