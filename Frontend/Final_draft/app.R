@@ -35,7 +35,7 @@ get_recommendation<-function(input)
     
   )
   
-  res <- httr::POST("http://127.0.0.1:5000/recommendation"
+  res <- httr::POST("http://127.0.0.1:5001/recommendation"
                     , body = user_input
                     , encode = "json")
   appData <- httr::content(res,as="text",encoding = "UTF-8")
@@ -51,7 +51,7 @@ add_click<-function(input)
   user_input = list(
     url= input$url
   )
-  res <- httr::POST("http://127.0.0.1:5000/add_click"
+  res <- httr::POST("http://127.0.0.1:5001/add_click"
                     , body = user_input
                     , encode = "json")
   appData <- httr::content(res,as="text",encoding = "UTF-8")
@@ -61,14 +61,14 @@ add_click<-function(input)
 
 get_articles<-function()
 {
-  res <- httr::GET('http://127.0.0.1:5000/get_articles')
+  res <- httr::GET('http://127.0.0.1:5001/get_articles')
   appData <- httr::content(res)
   return(appData)
 }
 
 get_rating<-function()
 {
-  res <- httr::GET('http://127.0.0.1:5000/get_rating')
+  res <- httr::GET('http://127.0.0.1:5001/get_rating')
   appData <- httr::content(res)
   return(appData)
 }
@@ -80,7 +80,7 @@ update_rating<-function(input)
   user_input = list(
     rating= input$rating
   )
-  res <- httr::POST("http://127.0.0.1:5000/update_rating"
+  res <- httr::POST("http://127.0.0.1:5001/update_rating"
                     , body = user_input
                     , encode = "json")
   appData <- httr::content(res)
