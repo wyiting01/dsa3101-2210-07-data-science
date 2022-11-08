@@ -3,7 +3,7 @@
 FROM rocker/shiny-verse:latest
 
 # setting working directory 
-WORKDIR ~\
+WORKDIR /srv/shiny-server/
 
 # system libraries of general use
 RUN apt-get update && apt-get install -y \
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     libssh2-1-dev
 
 # install R packages required
-# (change it dependeing on the packages you need)
+# (change it depending on the packages you need)
 RUN R -e "install.packages('shiny', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('shiny.router', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('shinydashboard', repos='http://cran.rstudio.com/')"
@@ -39,7 +39,7 @@ COPY www/logo-removebg-preview.png /srv/shiny-server/
 EXPOSE 3838
 
 # allow permission
-RUN sudo chown -R shiny:shiny /srv/shiny-server
+RUN sudo chown -R shiny:shiny /srv/shiny-server/
 
 # run app
 CMD ["/usr/bin/shiny-server"]
