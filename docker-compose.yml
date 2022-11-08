@@ -5,7 +5,6 @@ services:
        build: ./Frontend/Final_draft
        ports: 
            - "3838:3838"
-       environment: 
     backend:
        build: ./Backend
        ports: 
