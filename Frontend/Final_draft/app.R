@@ -297,7 +297,7 @@ ui <- shinyUI(navbarPage(
                                                                    tabsetPanel(
                                                                    tabPanel( value= "search_panel",
                                                                              textInput("search", label=NULL, value="Find jobs"
-                                                                             ),
+                                                                             ),title = "Home",
                                                                              fluidRow(
                                                                                column(4,
                                                                                       hr(),
@@ -344,7 +344,7 @@ ui <- shinyUI(navbarPage(
                                                                                  uiOutput("boxContentUI2")
                                                                                )
                                                                              )),
-                                                                  
+                                                              
                                                                    tabPanel("Career Guide",
                                                                             h4("This page has resume support etc.")),
                                                                    tabPanel("Learn!",
