@@ -189,9 +189,9 @@ def get_average_rating():
 x = requests.get('http://127.0.0.1:5000/key_terms', params={'title':'data analyst'})
 output = x.json()
 
-possible inputs for 'title'= ["production", "bank analyst","sales", "software engineer",
-"data analyst","product manager","data science research","ai and nlp",
-"cloud ai"]
+possible inputs for 'title'= clusters = ["banking", "it","project manager",
+"software developer","product manager","data science","sales","cybersecurity",
+"electrical engineer","ai and nlp"]
 '''
 @app.route('/key_terms',methods=["GET"])
 def get_key_terms():
