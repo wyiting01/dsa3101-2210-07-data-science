@@ -189,7 +189,7 @@ def get_average_rating():
 x = requests.get('http://127.0.0.1:5000/key_terms', params={'title':'data analyst'})
 output = x.json()
 
-possible inputs for 'title'= clusters = ["banking", "it","project manager",
+possible inputs for 'title'= ["banking", "it","project manager",
 "software developer","product manager","data science","sales","cybersecurity",
 "electrical engineer","ai and nlp"]
 '''
