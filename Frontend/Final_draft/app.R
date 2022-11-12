@@ -23,38 +23,92 @@ library(DT)
 library(visNetwork)
 library(rintrojs)
 
-Location <- c('Tampines','East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
+Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
 industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Automotive','Digital Marketing', 'Professional Services','Cyber Security', 'Mining','Government','Manufacturing','Transport')
 skills <- c('Python','R programming', 'Java', 'SQL', 'C++', 'C', 'Interpersonal skills', 'Machine Learning', 'Deep Learning', 'Data Visualisation', 'Data wrangling')
-jobtype <- c('full time', 'full time', 'internship')
-data1=toJSON('https://www.forbes.com/sites/bernardmarr/2022/10/31/the-top-5-data-science-and-analytics-trends-in-2023/?sh=2b3dab75c411')
+jobtype <- c('Full time', 'Part time', 'Internship')
 
-
-
-panel_div <- function(class_type, content) {
-  div(class = sprintf("panel panel-%s", class_type),
-      div(class = "panel-body", content)
+get_recommendation<-function(input)
+{
+  user_input = list(
+    expected_salary= input$Salary,
+    expected_hours= input$Type,
+    job_title=input$Jobtitle,
+    location= input$Location,
+    industry= input$Industry,
+    skills= input$Skills
+    
   )
+  
+  res <- httr::POST("http://backend_server:5000/recommendation"
+                    , body = user_input
+                    , encode = "json")
+  appData <- httr::content(res,as="text",encoding = "UTF-8")
+  appData<-gsub("NaN","NA",appData)
+  appData<-RJSONIO::fromJSON(appData,nullValue=NA)
+  #appData<-do.call(rbind.data.frame, appData)
+  return(appData)
+  
+}
+
+add_click<-function(input)
+{
+  user_input = list(
+    url= input$url
+  )
+  res <- httr::POST("http://backend_server:5000/add_click"
+                    , body = user_input
+                    , encode = "json")
+  appData <- httr::content(res,as="text",encoding = "UTF-8")
+  return(appData)
+  
+}
+
+get_articles<-function()
+{
+  res <- httr::GET('http://backend_server:5000/get_articles')
+  appData <- httr::content(res)
+  return(appData)
+}
+
+get_rating<-function()
+{
+  res <- httr::GET('http://backend_server:5000/get_rating')
+  appData <- httr::content(res)
+  return(appData)
+}
+
+update_rating<-function(input)
+{
+  user_input = list(
+    rating= input$rating
+  )
+  res <- httr::POST("http://backend_server:5000/update_rating"
+                    , body = user_input
+                    , encode = "json")
+  appData <- httr::content(res)
+  return(appData)
+  
 }
 
 ui <- shinyUI(navbarPage(
   title = tags$img(src="logo.png", height = "120px", width = "200px"), id = "navBar",
-                         theme = "paper.css",
-                         collapsible = TRUE,
-                         inverse = TRUE,
-                         windowTitle = "Data Dreams",
-                         position = "fixed-top",
-                         header = tags$style(
-                           ".navbar-right {
+  theme = "paper.css",
+  collapsible = TRUE,
+  inverse = TRUE,
+  windowTitle = "Data Dreams",
+  position = "fixed-top",
+  header = tags$style(
+    ".navbar-right {
                        float: right !important;
                        }",
-                           "body {padding-top: 75px;}"),
-                         
-                         tabPanel("FORM", value = "form",
-                                  
-                                  shinyjs::useShinyjs(),
-                                  
-                                  tags$head(tags$script(HTML('
+    "body {padding-top: 75px;}"),
+  
+  tabPanel("FORM", value = "form",
+           
+           shinyjs::useShinyjs(),
+           
+           tags$head(tags$script(HTML('
                                        var fakeClick = function(tabName) {
                                        var dropdownList = document.getElementsByTagName("a");
                                        for (var i = 0; i < dropdownList.length; i++) {
@@ -65,353 +119,310 @@ ui <- shinyUI(navbarPage(
                                        }
                                        };
                                        '))),
-                     
-                                  fluidRow(
-                                    column(3),
-                                    column(6,
-                                           tags$div(align = "right", 
-                                                    tags$a("Skip to home page", 
-                                                           onclick="fakeClick('home')", 
-                                                           class="btn btn-primary btn-lg",
-                                                           style="width:150 ;height: 50;"))
-                                    )
-                                  
-                                  ),
-                
-                                  
-                                  # WHAT
-                                  fluidRow(
-                                    column(3),
-                                    column(6,
-                                           div(id = 'introheader',(p("DataDreams"))),
-                                           tags$style(type="text/css", "#introheader {text-align: center;color : white;font-size:40px;font-weight : bold}")
-                                           
-                                           
-                                    ),
-                                    column(3)
-                                  ),
-                                  
-                                  fluidRow(
-                                    style = "height:50px;"),
-                                  
-                                  
-                                  fluidRow(
-                                    column(3),
-                                    column(6,
-                                           div(id = 'introbody',(p("An interactive tool to help you explore the paths to take as a Data Scientist. With information about the 
+           
+           fluidRow(
+             column(3),
+             column(6,
+                    tags$div(align = "right", 
+                             tags$a("Skip to home page", 
+                                    onclick="fakeClick('home')", 
+                                    class="btn btn-primary btn-lg",
+                                    style="width:150 ;height: 50;"))
+             )
+             
+           ),
+           
+           
+           # WHAT
+           fluidRow(
+             column(3),
+             column(6,
+                    div(id = 'introheader',(p("DataDreams"))),
+                    tags$style(type="text/css", "#introheader {text-align: center;color : white;font-size:40px;font-weight : bold}")
+                    ),
+             column(3)
+           ),
+           
+           fluidRow(
+             style = "height:50px;"),
+           fluidRow(
+             column(3),
+             column(6,
+                    div(id = 'introbody',(p("An interactive tool to help you explore the paths to take as a Data Scientist. With information about the 
                                                     similarity scores generated specially for you based on your filters, tips and tricks on how to pass a job interview, and more, you can 
                                                      build your own path based on what is meaningful to you"))),
-                                           tags$style(type="text/css", "#introbody {text-align: center;color : white;font-size:20px}")
-                                           
-                                           
-                                    ),
-                                    column(3)
-                                  ),
-                                  
-                                  fluidRow(
-                                    setBackgroundImage(
-                                      src = "https://source.unsplash.com/Q1p7bh3SHj8/4069x2010"  #https://source.unsplash.com/Q1p7bh3SHj8/4069x2010
-                                    ),
-                                    fluidRow(
-                                      column(8, align="center", offset = 2,
-                                             hr(),
-                                             div(id = 'filter1',(textInput("filter1", label = "Which Location would you like to work in?")),
-                                                 tags$style(type="text/css", "#filter1 {color : white;font-size:20px;}"),
-                                                 actionButton("east", label="East"),
-                                                 actionButton("north", label="North"),
-                                                 actionButton("south", label="South"),
-                                                 actionButton("west", label="West"),
-                                                 actionButton("northeast", label="NorthEast"),
-                                                 actionButton("southeast", label="Southeast"),
-                                                 actionButton("northwest", label="Northwest"),
-                                                 actionButton("southwest", label="Southwest")
-                                             )))),
-                                  fluidRow(
-                                    
-                                    style = "height:150px;"),
-                                  
-                                  fluidRow(
-                                    column(8, align="center", offset = 2,
-                                           hr(),
-                                           div(id = 'filter2',(textInput("filter2", label = "Which Industry would you like to work in?")),
-                                               tags$style(type="text/css", "#filter2 {color : white; font-size:20px;}" ),
-                                               actionButton("Finance", label="Finance"),
-                                               actionButton("media", label="Media"),
-                                               actionButton("healthcare", label="Healthcare"),
-                                               actionButton("retail", label="Retail"),
-                                               actionButton("telecommunications", label="Telecommunications"),
-                                               actionButton("automotive", label="Automotive"),
-                                               actionButton("digitalmarketing", label="Digital Marketing"),
-                                               actionButton("professional_services", label="Professional services"),
-                                               actionButton("cyber_security", label="Cyber Security"),
-                                               actionButton("mining", label="Mining"),
-                                               actionButton("Government", label="Government"),
-                                               actionButton("manufacturing", label="Manufacturing"),
-                                               actionButton("transport", label="transport")
-                                           ))),
-                                  fluidRow(
-                                    
-                                    style = "height:150px;"),
-                                  
-                                  fluidRow(
-                                    column(8, align="center", offset = 2,
-                                           hr(),
-                                           div(id = 'filter3',(textInput("filter3", label = "What Skills do you possess?")),
-                                               tags$style(type="text/css", "#filter3 {color : white; font-size:20px;}"),
-                                               actionButton("python", label="Python"),
-                                               actionButton("R", label="R programming"),
-                                               actionButton("Java", label="Java"),
-                                               actionButton("SQL", label="SQL"),
-                                               actionButton("C++", label="C++"),
-                                               actionButton("Interpersonal skills", label="Interpersonal skills"),
-                                               actionButton("Machine learning", label="Machine learning"),
-                                               actionButton("deep learning", label="Deep learning"),
-                                               actionButton("Data visualisation", label="Data visualisation"),
-                                               actionButton("Data wrangling", label="Data wrangling"),
-                                               actionButton("Software engineering", label="Software engineering"),
-                                               actionButton("modelling", label="Modelling")
-                                           ))),
-                                  fluidRow(
-                                    
-                                    style = "height:150px;"),
-                                  
-                                  fluidRow(
-                                    column(8, align="center", offset = 2,
-                                           hr(),
-                                           div(id = 'filter4',textInput("filter4", label = "What Job Type are you looking for?")),
-                                           tags$style(type="text/css", "#filter4 {color : white; font-size:20px;}"),
-                                           actionButton("fulltime", label="Full time"),
-                                           actionButton("Parttime", label="Part time"),
-                                           actionButton("Intern", label="Intern")
-                                    )),
-                                  
-                                  fluidRow(
-                                    
-                                    style = "height:150px;"),
-                                  
-                                  fluidRow(
-                                    column(8, align="center", offset = 2,
-                                           hr(),
-                                           div(id = 'integer',
-                                               sliderInput("integer", "What is your Expected Salary per month?:",
-                                                           min = 0, max = 10000,
-                                                           value = 0, step = 500),
-                                               tags$style(type="text/css", "#integer {color : white; font-size:20px;}")
-                                           ))),
-                                  
-                                  fluidRow(
-                                    
-                                    style = "height:150px;"),
-                                  fluidRow(
-                                    column(3),
-                                    column(6,
-                                           tags$div(align = "right", 
-                                                    tags$a("Search", 
-                                                           onclick="fakeClick('home')", 
-                                                           class="btn btn-primary btn-lg",
-                                                           style="width:150 ;height: 50;"))
-                                    )
-                                  )),
-                         tabPanel("HOME", value = "home",
-                                  dashboardPage(        
-                                    dashboardHeader(title = "DataDreams"),
-                                    dashboardSidebar(
-                                      sidebarMenu(
-                                        menuItem("Search", tabName = "Search", icon = icon("search")),
-                                        menuItem("Saved", tabName = "Saved", icon = icon("save")),
-                                        menuItem("Applied", tabName = "Applied", icon = icon("thumbs-up"))
-                                      )
-                                    ),
-                                    body=shinydashboard::dashboardBody(
-                                      
-                                      tabItems(
-                                        tabItem("Search",
-                                                fluidPage(
-                                                  br(),
-                                                  fluidRow(),
-                                                  ui <- navbarPage(fluid = TRUE, title = "GetHired",
-                                                                   tabsetPanel(
-                                                                   tabPanel( value= "search_panel",
-                                                                             textInput("search", label=NULL, value="Find jobs"
-                                                                             ),title = "Home",
-                                                                             fluidRow(
-                                                                               column(4,
-                                                                                      hr(),
-                                                                                      sliderInput(inputId = "Salary", label = "Expected Salary:",
-                                                                                                  min = 0, max = 10000,
-                                                                                                  value = 0, step = 500)),
-                                                                               column(4,
-                                                                                      hr(),
-                                                                                      selectInput(inputId = 'Industry', label='Industry', c(Choose='', industry), selectize=FALSE)
-                                                                               ),
-                                                                               column(4,
-                                                                                      hr(),
-                                                                                      selectInput(inputId = 'Location', label = 'Location', c(Choose='', Location),selectize=FALSE)
-                                                                               )
-                                                                             ),
-                                                                             fluidRow(
-                                                                               column(4,
-                                                                                      hr(),
-                                                                                      selectInput(inputId = 'Type', label = 'Job type', c(Choose='', jobtype),selectize=FALSE)
-                                                                               ),
-                                                                               column(4,
-                                                                                      hr(),
-                                                                                      selectInput(inputId = 'Skills', label = 'Skills', c(Choose='', skills), selectize=FALSE)
-                                                                               ),
-                                                                               column(4,
-                                                                                      hr(),
-                                                                                      selectInput(inputId = 'Jobtitle', label = 'Job title', c(Choose='', c('Data Analyst','Data Scientist')), selectize=FALSE)	
-                                                                               ),	
-                                                                               column(4,	
-                                                                                      hr(),
-                                                                                      actionButton("search", label = "Search", width = '250px')),
-       
-                                                                             ),
-                                                                             
-                                                                             br(),
-                                                                              fluidRow(
-                                                                                dataTableOutput('ex4'),
-                                                                                uiOutput("box_list"),
+                    tags$style(type="text/css", "#introbody {text-align: center;color : white;font-size:20px}")
+                    
+                    
+             ),
+             column(3)
+           ),
+           
+           fluidRow(
+             setBackgroundImage(
+               src = "https://source.unsplash.com/Q1p7bh3SHj8/4069x2010"  #https://source.unsplash.com/Q1p7bh3SHj8/4069x2010
+             ),
+             fluidRow(
+               column(8, align="center", offset = 2,
+                      hr(),
+                      div(id = 'filter1',(textInput("filter1", label = "Which Location would you like to work in?")),
+                          tags$style(type="text/css", "#filter1 {color : white;font-size:20px;}"),
+                          actionButton("east", label="East"),
+                          actionButton("north", label="North"),
+                          actionButton("south", label="South"),
+                          actionButton("west", label="West"),
+                          actionButton("northeast", label="NorthEast"),
+                          actionButton("southeast", label="Southeast"),
+                          actionButton("northwest", label="Northwest"),
+                          actionButton("southwest", label="Southwest")
+                      )))),
+           fluidRow(
+             
+             style = "height:150px;"),
+           
+           fluidRow(
+             column(8, align="center", offset = 2,
+                    hr(),
+                    div(id = 'filter2',(textInput("filter2", label = "Which Industry would you like to work in?")),
+                        tags$style(type="text/css", "#filter2 {color : white; font-size:20px;}" ),
+                        actionButton("Finance", label="Finance"),
+                        actionButton("media", label="Media"),
+                        actionButton("healthcare", label="Healthcare"),
+                        actionButton("retail", label="Retail"),
+                        actionButton("telecommunications", label="Telecommunications"),
+                        actionButton("automotive", label="Automotive"),
+                        actionButton("digitalmarketing", label="Digital Marketing"),
+                        actionButton("professional_services", label="Professional services"),
+                        actionButton("cyber_security", label="Cyber Security"),
+                        actionButton("mining", label="Mining"),
+                        actionButton("Government", label="Government"),
+                        actionButton("manufacturing", label="Manufacturing"),
+                        actionButton("transport", label="transport")
+                    ))),
+           fluidRow(
+             
+             style = "height:150px;"),
+           
+           fluidRow(
+             column(8, align="center", offset = 2,
+                    hr(),
+                    div(id = 'filter3',(textInput("filter3", label = "What Skills do you possess?")),
+                        tags$style(type="text/css", "#filter3 {color : white; font-size:20px;}"),
+                        actionButton("python", label="Python"),
+                        actionButton("R", label="R programming"),
+                        actionButton("Java", label="Java"),
+                        actionButton("SQL", label="SQL"),
+                        actionButton("C++", label="C++"),
+                        actionButton("Interpersonal skills", label="Interpersonal skills"),
+                        actionButton("Machine learning", label="Machine learning"),
+                        actionButton("deep learning", label="Deep learning"),
+                        actionButton("Data visualisation", label="Data visualisation"),
+                        actionButton("Data wrangling", label="Data wrangling"),
+                        actionButton("Software engineering", label="Software engineering"),
+                        actionButton("modelling", label="Modelling")
+                    ))),
+           fluidRow(
+             
+             style = "height:150px;"),
+           
+           fluidRow(
+             column(8, align="center", offset = 2,
+                    hr(),
+                    div(id = 'filter4',textInput("filter4", label = "What Job Type are you looking for?")),
+                    tags$style(type="text/css", "#filter4 {color : white; font-size:20px;}"),
+                    actionButton("fulltime", label="Full time"),
+                    actionButton("Parttime", label="Part time"),
+                    actionButton("Intern", label="Intern")
+             )),
+           
+           fluidRow(
+             
+             style = "height:150px;"),
+           
+           fluidRow(
+             column(8, align="center", offset = 2,
+                    hr(),
+                    div(id = 'integer',
+                        sliderInput("integer", "What is your Expected Salary per month?:",
+                                    min = 0, max = 10000,
+                                    value = 0, step = 500),
+                        tags$style(type="text/css", "#integer {color : white; font-size:20px;}")
+                    ))),
+           
+           fluidRow(
+             
+             style = "height:150px;"),
+           fluidRow(
+             column(3),
+             column(6,
+                    tags$div(align = "right", 
+                             tags$a("Search", 
+                                    onclick="fakeClick('home')", 
+                                    class="btn btn-primary btn-lg",
+                                    style="width:150 ;height: 50;"))
+             )
+           )),
+  tabPanel("HOME", value = "home",
+           dashboardPage(        
+             header = dashboardHeader(title = "DataDreams"),
+             sidebar = dashboardSidebar(
+               sidebarMenu(
+                 menuItem("Search", tabName = "Search", icon = icon("search")),
+                 menuItem("Saved", tabName = "Saved", icon = icon("save")),
+                 menuItem("Applied", tabName = "Applied", icon = icon("thumbs-up"))
+               )
+             ),
+             body = shinydashboard::dashboardBody(
+               tabItems(
+                 tabItem("Search",
+                         fluidPage(
+                           br(),
+                           fluidRow(),
+                           ui <- navbarPage(fluid = TRUE, title = "GetHired",
+                                            tabPanel(value= "search_panel",
+                                                     textInput("search", label=NULL, value="Find jobs"
+                                                     )),
+                                            tabPanel("Career Guide",
+                                                     h4("This page has resume support etc.")
+                                            ),
+                                            tabPanel("Learn!",
+                                                     fluidRow(
+                                                       box(
+                                                         title = "Intro to R Programming",
+                                                         width = 3,
+                                                         height = 200,
+                                                         img(src="john_hopkins_uni_logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
+                                                         tags$a(href="https://www.coursera.org/learn/r-programming", "Link to the course")),
+                                                       box(
+                                                         title = "Applied Data Science with Python",
+                                                         width = 3,
+                                                         height = 200,
+                                                         img(src="University-of-Michigan-Logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
+                                                         tags$a(href="https://www.coursera.org/specializations/data-science-python", "Link to the course")),
+                                                       box(
+                                                         title = "Machine Learning",
+                                                         width = 3,
+                                                         height = 200,
+                                                         img(src="Stanford-logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
+                                                         tags$a(href="https://www.coursera.org/specializations/machine-learning-introduction", "Link to the course"))
+                                                     ),
+                                                     fluidRow(
+                                                       box(
+                                                         title = "Technical Test Practice",
+                                                         width = 10,
+                                                         height = 150,
+                                                         actionButton(inputId = 'Easy', label ="easy", width = 280),
+                                                         actionButton(inputId = 'Moderate', label ="moderate", width = 280),
+                                                         actionButton(inputId = 'Hard', label ="hard" ,width = 280),
+                                                       )
+                                                     )
+                                                    ),
+                                            tabPanel("My Profile",
+                                                     h4("This page contains user profile"), fileInput("file", "Upload Your Resume")
+                                                     )
+                           ),
+                           fluidRow(
+                             column(4,
+                                    hr(),
+                                    sliderInput(inputId = "Salary", label = "Expected Salary:",
+                                                min = 0, max = 10000,
+                                                value = 0, step = 500)),
+                             column(4,
+                                    hr(),
+                                    selectInput(inputId = 'Industry', label='Industry', c(Choose='', industry), selectize=FALSE)
+                             ),
+                             column(4,
+                                    hr(),
+                                    selectInput(inputId = 'Location', label = 'Location', c(Choose='', Location),selectize=FALSE)
+                             )
+                           ),
+                           fluidRow(
+                             column(4,
+                                    hr(),
+                                    selectInput(inputId = 'Type', label = 'Job type', c(Choose='', jobtype),selectize=FALSE)
+                             ),
+                             column(4,
+                                    hr(),
+                                    selectInput(inputId = 'Skills', label = 'Skills', c(Choose='', skills), selectize=FALSE)
+                             ),
+                             column(4,
+                                    hr(),
+                                    actionButton("search", label = "Search", width = '250px'))
+                           ),
+                           uiOutput("box_list")
+                                                     
+                           
+                         )
+                 ),
+                 tabItem(tabName = "Saved",
+                         h1("Saved applications"),
+                         uiOutput("box_list_saved")
+                 ),
+                 tabItem(tabName = "Applied",
+                         h1("Jobs Applied"),
+                         uiOutput("box_list_apply")
+                 )
+               )
+             )
+           )
+  ),
+)
+)
+          
 
-                                                                               box(
-                                                                                 title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
-                                                                                 actionButton("titleBtId", "", icon = icon("refresh"),
-                                                                                              class = "btn-xs", title = "Update",
-                                                                                              onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
-                                                                                 width = 3, solidHeader = TRUE, status = "warning",
-                                                                                 uiOutput("boxContentUI2")
-                                                                               )
-                                                                             )
-                                                                   ),
-                                                              
-                                                                   tabPanel("Career Guide",
-                                                                            fluidRow(
-                                                                              box(
-                                                                                title = "Guides",
-                                                                                width = 12,
-                                                                                height = 100,
-                                                                                actionButton(inputId = 'Finding Jobs', label ="Finding Jobs", width = 200),
-                                                                                actionButton(inputId = 'Resume', label ="Resume", width = 200),
-                                                                                actionButton(inputId = 'Interview', label ="Interview" ,width = 200),
-                                                                                actionButton(inputId = 'Contracts', label ="Contracts" ,width = 200)
-                                                                              )
-                                                                            ),
-                                                                            fluidRow(
-                                                                              h4("Frequently Asked Interview Questions"),
-                                                                              tabBox(
-                                                                                title = "Foodpanda",
-                                                                                side="right",
-                                                                                id="tabset1",
-                                                                                width = 5,
-                                                                                height = 200,
-                                                                                tabPanel("Answers", "1) Briefly introduce yourself: What’s your name?How long have you been working as [profession]?What do you love about your job? What are your top 2-3 achievements that are relevant to the job you’re applying for?"),
-                                                                                tabPanel("Questions", "1) Tell me something about yourself"), tags$a(href="https://www.foodpanda.com/", "Research about FoodPanda")),
-                                                                              tabBox(
-                                                                                title = "Google",
-                                                                                side="right",
-                                                                                id="tabset2",
-                                                                                width = 5,
-                                                                                height = 200,
-                                                                                tabPanel("Answers", "1) Although at first glance this might seem like a straightforward question, you should grab any opportunity you can to show your interest in the company."),
-                                                                                tabPanel("Questions", "1) How did you hear about this position?"), tags$a(href="https://careers.google.com/", "Research about Google"))
-                                                                            ),
-                                                                            fluidRow(
-                                                                              box(
-                                                                                title = "Data Science Career Pathways",
-                                                                                width = 12,
-                                                                                height = 100,
-                                                                                actionButton(inputId = 'Data Science', label ="Data Science", width = 280),
-                                                                                actionButton(inputId = 'Data Engineering', label ="Data Engineering", width = 280),
-                                                                                actionButton(inputId = 'Data Analytics', label ="Data Analytics" ,width = 280)
-                                                                              )
-                                                                            )
-                                                                            ),
-                                                                   tabPanel("Learn!",
-                                                                            fluidRow(
-                                                                              box(
-                                                                                title = "Intro to R Programming",
-                                                                                width = 3,
-                                                                                height = 200,
-                                                                                img(src="john_hopkins_uni_logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
-                                                                                tags$a(href="https://www.coursera.org/learn/r-programming", "Link to the course")),
-                                                                              box(
-                                                                                title = "Applied Data Science with Python",
-                                                                                width = 3,
-                                                                                height = 200,
-                                                                                img(src="University-of-Michigan-Logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
-                                                                                tags$a(href="https://www.coursera.org/specializations/data-science-python", "Link to the course")),
-                                                                              box(
-                                                                                title = "Machine Learning",
-                                                                                width = 3,
-                                                                                height = 200,
-                                                                                img(src="Stanford-logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
-                                                                                tags$a(href="https://www.coursera.org/specializations/machine-learning-introduction", "Link to the course"))
-                                                                            ),
-                                                                            fluidRow(
-                                                                              box(
-                                                                                title = "Technical Test Practice",
-                                                                                width = 12,
-                                                                                height = 100,
-                                                                                actionButton(inputId = 'Easy', label ="easy", width = 280),
-                                                                                actionButton(inputId = 'Moderate', label ="moderate", width = 280),
-                                                                                actionButton(inputId = 'Hard', label ="hard" ,width = 280),
-                                                                              )
-                                                                            )),
-                                                                   tabPanel("My Profile",
-                                                                            h4("This page contains user profile"), fileInput("file", "Upload Your Resume"))
-                                                                   
-                                                  ))
-                                                  
-                                                  
-                                                )
-                                        ),
-                                        tabItem(tabName = "Saved",
-                                                h1("Saved applications")
-                                        ),
-                                        tabItem(tabName = "Applied",
-                                                h1("Jobs Applied")
-                                        )
-                                      )
-                                      # ,
-                                      # fluidRow(
-                                      #   dataTableOutput('ex4'),
-                                      # 
-                                      #   box(
-                                      #     title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
-                                      #     actionButton("titleBtId", "", icon = icon("refresh"),
-                                      #                  class = "btn-xs", title = "Update",
-                                      #                  onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
-                                      #     width = 3, solidHeader = TRUE, status = "warning",
-                                      #     uiOutput("boxContentUI2")
-                                      #   )
-                                      # )
-                                    ), 
-                                    sidebarPanel(
-                                      width=3
-                                    )
-                                  ))
-))
+
+gaugeServer <- function(id, value) {
+  moduleServer(
+    id,
+    function(input, output, session) {
+      output$mapgauge<-flexdashboard::renderGauge({
+        #output$mapgauge<-renderUI({
+        #tagList(
+        flexdashboard::gauge(value=value, 
+                             min = 0, 
+                             max = 100, 
+                             sectors = flexdashboard::gaugeSectors(success = c(80, 100), 
+                                                                   warning = c(50, 79),
+                                                                   danger = c(0, 49)),
+                             symbol = "%",
+                             label = "MATCH")
+        #)
+      })
+    })
+}
+
+gaugeUI <- function(id) {
+  ns <- NS(id)
+  flexdashboard::gaugeOutput(ns("mapgauge"))
+  #uiOutput(ns("mapgauge"))
+  
+}
+
+panel_div <- function(class_type, content) {
+  div(class = sprintf("panel panel-%s", class_type),
+      div(class = "panel-body", content)
+  )
+}
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-  
   values <- reactiveValues()
-  user_input  <- reactive({
+  user_input <- reactive({
     list(
       expected_salary = input$Salary,
       industry = input$Industry,
       location = input$Location,
       expected_hours = input$Type,
       skills = input$Skills
-      
     )
   })
+  
   x<-eventReactive(input$search, {
     
-    x <- httr::POST(
-      "http://backend_server:5000/recommendation"
-      , body = user_input()
-      , encode = "json")
+    x <- httr::POST("http://backend_server:5000/recommendation"
+                    , body = user_input()
+                    , encode = "json")
     x <- httr::content(x,as="text",encoding = "UTF-8")
     x<-gsub("NaN","NA",x)
     x<-RJSONIO::fromJSON(x,nullValue=NA)
@@ -438,20 +449,20 @@ server <- function(input, output) {
     }
     # call the module UI n times
     lista<-lapply(round((100*list_data$similarity_scores)),gauge_function)
-    names(lista)<-paste0("gauge",1:length(list_data$similarity_scores))
+    names(lista)<-paste0("gauge(",1:length(list_data$similarity_scores),")")
     
-    for(i in names(lista))
-    {
-      message("aqui")
-      message(i)
-      message(as.character(lista[[i]]))
-      output[[i]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
-      output[[paste0(i,"save")]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
-      output[[paste0(i,"apply")]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
-      
-      
-    }
-    
+    # for(i in names(lista))
+    # {
+    #   message("aqui")
+    #   message(i)
+    #   message(as.character(lista[[i]]))
+    #   output[[i]] = renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+    #   output[[paste0(i,"save")]] = renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+    #   output[[paste0(i,"apply")]] = renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+    #   
+    # 
+    # }
+
     
     
     
@@ -460,10 +471,11 @@ server <- function(input, output) {
   })
   
   
+  
   boxes<-reactive({
     list_data<-x()
     v <- list()
-    v[[4]]<-     box(
+    v[[4]]<- box(
       title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
       actionButton("titleBtId", "", icon = icon("refresh"),
                    class = "btn-xs", title = "Update",
@@ -485,9 +497,9 @@ server <- function(input, output) {
         box(
           title=list_data$title[i],status="warning",solidHeader=TRUE,
           paste0(list_data$hours[i] ," job $:",list_data$max_salary[i]),
-          br(), "Industry:",input$Industry , br(), paste0("Skills: ",paste0(c(input$Skills,unlist(list_data$relevant_skills[[index[i]]])),collapse = ",") ), width = 3,
+          br(), "Industry: Delivery", br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[i]]),collapse = ",") ), width = 3,
           fluidRow(
-            flexdashboard::gaugeOutput(paste0("gauge",i)),
+            gaugeOutput(paste0("gauge",i)),
             box(actionButton(paste0("button",index), label="Save", icon = icon("save")),
                 #uiOutput("but3")
             ),
@@ -538,7 +550,7 @@ server <- function(input, output) {
         box(
           title=list_data$title[index[j]],status="warning",solidHeader=TRUE,
           paste0(list_data$hours[index[j]] ," job $:",list_data$max_salary[index[j]]),
-          br(), "Industry:",input$Industry , br(), paste0("Skills: ",paste0(c(input$Skills,unlist(list_data$relevant_skills[[index[j]]])),collapse = ",") ), width = 3,
+          br(), "Industry: Delivery", br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
           fluidRow(
             flexdashboard::gaugeOutput(paste0("gauge",index[j],"save"))
             #uiOutput("widgets")
@@ -547,9 +559,6 @@ server <- function(input, output) {
         )
       j<-j+1
     }
-    
-    
-    
     
     v
     
@@ -578,7 +587,7 @@ server <- function(input, output) {
         box(
           title=list_data$title[index[j]],status="warning",solidHeader=TRUE,
           paste0(list_data$hours[index[j]] ," job $:",list_data$max_salary[index[j]]),
-          br(), "Industry:",input$Industry , br(), paste0("Skills: ",paste0(c(input$Skills,unlist(list_data$relevant_skills[[index[j]]])),collapse = ",") ), width = 3,
+          br(), "Industry: Delivery", br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
           fluidRow(
             flexdashboard::gaugeOutput(paste0("gauge",index[j],"apply"))
           )
@@ -593,7 +602,6 @@ server <- function(input, output) {
     v
     
   })
-  
   output$box_list <- renderUI(boxes())
   output$box_list_saved <- renderUI(boxes_save())
   output$box_list_apply <- renderUI(boxes_apply())
@@ -601,6 +609,5 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 
-
-
-shinyApp(ui, server)
+# Run the application 
+shinyApp(ui = ui, server = server)
