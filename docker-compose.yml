@@ -3,10 +3,12 @@ version: '3'
 services:
     frontend:
        build: ./Frontend/Final_draft
+       container_name: frontend_server
        ports: 
            - "3838:3838"
     backend:
        build: ./Backend
+       container_name: backend_server
        ports: 
            - "5000:5000"
 
