@@ -23,77 +23,13 @@ library(DT)
 library(visNetwork)
 library(rintrojs)
 
-get_recommendation<-function(input)
-{
-  user_input = list(
-    expected_salary= input$Salary,
-    expected_hours= input$Type,
-    job_title=input$Jobtitle,
-    location= input$Location,
-    industry= input$Industry,
-    skills= input$Skills
-    
-  )
-  
-  res <- httr::POST("http://127.0.0.1:5000/recommendation"
-                    , body = user_input
-                    , encode = "json")
-  appData <- httr::content(res,as="text",encoding = "UTF-8")
-  appData<-gsub("NaN","NA",appData)
-  appData<-RJSONIO::fromJSON(appData,nullValue=NA)
-  #appData<-do.call(rbind.data.frame, appData)
-  return(appData)
-  
-}
-
-add_click<-function(input)
-{
-  user_input = list(
-    url= input$url
-  )
-  res <- httr::POST("http://127.0.0.1:5000/add_click"
-                    , body = user_input
-                    , encode = "json")
-  appData <- httr::content(res,as="text",encoding = "UTF-8")
-  return(appData)
-  
-}
-
-get_articles<-function()
-{
-  res <- httr::GET('http://127.0.0.1:5000/get_articles')
-  appData <- httr::content(res)
-  return(appData)
-}
-
-get_rating<-function()
-{
-  res <- httr::GET('http://127.0.0.1:5000/get_rating')
-  appData <- httr::content(res)
-  return(appData)
-}
-
-
-
-update_rating<-function(input)
-{
-  user_input = list(
-    rating= input$rating
-  )
-  res <- httr::POST("http://127.0.0.1:5000/update_rating"
-                    , body = user_input
-                    , encode = "json")
-  appData <- httr::content(res)
-  return(appData)
-  
-}
-
-Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
+Location <- c('Tampines','East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
 industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Automotive','Digital Marketing', 'Professional Services','Cyber Security', 'Mining','Government','Manufacturing','Transport')
 skills <- c('Python','R programming', 'Java', 'SQL', 'C++', 'C', 'Interpersonal skills', 'Machine Learning', 'Deep Learning', 'Data Visualisation', 'Data wrangling')
-jobtype <- c('Full time', 'Part time', 'Internship')
-#testing daily updates
+jobtype <- c('full time', 'full time', 'internship')
 data1=toJSON('https://www.forbes.com/sites/bernardmarr/2022/10/31/the-top-5-data-science-and-analytics-trends-in-2023/?sh=2b3dab75c411')
+
+
 
 panel_div <- function(class_type, content) {
   div(class = sprintf("panel panel-%s", class_type),
@@ -286,7 +222,7 @@ ui <- shinyUI(navbarPage(
                                         menuItem("Applied", tabName = "Applied", icon = icon("thumbs-up"))
                                       )
                                     ),
-                                    dashboardBody(
+                                    body=shinydashboard::dashboardBody(
                                       
                                       tabItems(
                                         tabItem("Search",
@@ -335,6 +271,7 @@ ui <- shinyUI(navbarPage(
                                                                              br(),
                                                                               fluidRow(
                                                                                 dataTableOutput('ex4'),
+                                                                                uiOutput("box_list"),
 
                                                                                box(
                                                                                  title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
@@ -458,18 +395,213 @@ ui <- shinyUI(navbarPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  dta<-eventReactive(input$search,{
+  values <- reactiveValues()
+  user_input  <- reactive({
+    list(
+      expected_salary = input$Salary,
+      industry = input$Industry,
+      location = input$Location,
+      expected_hours = input$Type,
+      skills = input$Skills
+      
+    )
+  })
+  x<-eventReactive(input$search, {
     
-    dta<-get_recommendation(input)
-    dta$relevant_skills<-NULL
-    nn<-names(dta)
-    dta<-as.data.frame(do.call(cbind, dta))
-    names(dta)<-nn
-    dta
+    x <- httr::POST(
+      #"http://127.0.0.1:5000/recommendation"
+      "http://data-provider-service:5000/recommendation"
+      , body = user_input()
+      , encode = "json")
+    x <- httr::content(x,as="text",encoding = "UTF-8")
+    x<-gsub("NaN","NA",x)
+    x<-RJSONIO::fromJSON(x,nullValue=NA)
+    x
+  })
+  
+  output$jsonview <- renderPrint({
+    req(json_data())
+  })
+  
+  observe({
+    list_data<-x()
+    
+    gauge_function<-function(i)
+    {
+      flexdashboard::gauge(value=i, 
+                           min = 0, 
+                           max = 100, 
+                           sectors = flexdashboard::gaugeSectors(success = c(80, 100), 
+                                                                 warning = c(50, 79),
+                                                                 danger = c(0, 49)),
+                           symbol = "%",
+                           label = "MATCH")
+    }
+    # call the module UI n times
+    lista<-lapply(round((100*list_data$similarity_scores)),gauge_function)
+    names(lista)<-paste0("gauge",1:length(list_data$similarity_scores))
+    
+    for(i in names(lista))
+    {
+      message("aqui")
+      message(i)
+      message(as.character(lista[[i]]))
+      output[[i]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+      output[[paste0(i,"save")]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+      output[[paste0(i,"apply")]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+      
+      
+    }
+    
+    
+    
+    
+    
     
   })
   
-  output$ex4 <- renderDataTable(dta(), options = list(searching = FALSE, paging=FALSE))
+  
+  boxes<-reactive({
+    list_data<-x()
+    v <- list()
+    v[[4]]<-     box(
+      title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
+      actionButton("titleBtId", "", icon = icon("refresh"),
+                   class = "btn-xs", title = "Update",
+                   onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
+      width = 3, solidHeader = TRUE, status = "warning",
+      #uiOutput("boxContentUI2")
+    )
+    
+    for (i in 1:(length(list_data$similarity_scores))){
+      #for (i in 1:3){
+      if(i<4){
+        index<-i  
+      }else{
+        index<-i+1
+      }
+      
+      
+      v[[index]] <- 
+        box(
+          title=list_data$title[i],status="warning",solidHeader=TRUE,
+          paste0(list_data$hours[i] ," job $:",list_data$max_salary[i]),
+          br(), "Industry:",input$Industry , br(), paste0("Skills: ",paste0(c(input$Skills,unlist(list_data$relevant_skills[[index[i]]])),collapse = ",") ), width = 3,
+          fluidRow(
+            flexdashboard::gaugeOutput(paste0("gauge",i)),
+            box(actionButton(paste0("button",index), label="Save", icon = icon("save")),
+                #uiOutput("but3")
+            ),
+            box(actionButton(paste0("apply",index), label="Apply", icon = icon("th")),
+                #uiOutput("applybut3")
+            )
+          )
+          #width=3
+        )
+      
+    }
+    
+    cutt<-c(1,which(1:length(v)%%4==0),length(v))
+    mat<-cbind((rev(rev(cutt)[-1])+1),cutt[-1])
+    mat[1,1]<-1
+    
+    
+    finalist<-list()
+    for(j in 1:nrow(mat))
+    {
+      finalist[[j]]<-fluidRow(v[mat[j,1]:mat[j,2]]) 
+      
+    }
+    
+    finalist
+  })
+  
+  
+  boxes_save<-reactive({
+    
+    list_data<-x()
+    v <- list()
+    print(v)
+    index<-c()
+    for (i in 1:(length(list_data$similarity_scores))){
+      
+      index<-c(index,input[[paste0("button",i)]])
+    }
+    index<-which(index>0)
+    
+    j <-1
+    
+    
+    
+    while(j<=length(index))
+    {
+      v[[j]] <- 
+        box(
+          title=list_data$title[index[j]],status="warning",solidHeader=TRUE,
+          paste0(list_data$hours[index[j]] ," job $:",list_data$max_salary[index[j]]),
+          br(), "Industry:",input$Industry , br(), paste0("Skills: ",paste0(c(input$Skills,unlist(list_data$relevant_skills[[index[j]]])),collapse = ",") ), width = 3,
+          fluidRow(
+            flexdashboard::gaugeOutput(paste0("gauge",index[j],"save"))
+            #uiOutput("widgets")
+          )
+          #width=3
+        )
+      j<-j+1
+    }
+    
+    
+    
+    
+    v
+    
+  })
+  
+  
+  boxes_apply<-reactive({
+    
+    list_data<-x()
+    v <- list()
+    print(v)
+    index<-c()
+    for (i in 1:(length(list_data$similarity_scores))){
+      
+      index<-c(index,input[[paste0("apply",i)]])
+    }
+    index<-which(index>0)
+    
+    j <-1
+    
+    
+    
+    while(j<=length(index))
+    {
+      v[[j]] <- 
+        box(
+          title=list_data$title[index[j]],status="warning",solidHeader=TRUE,
+          paste0(list_data$hours[index[j]] ," job $:",list_data$max_salary[index[j]]),
+          br(), "Industry:",input$Industry , br(), paste0("Skills: ",paste0(c(input$Skills,unlist(list_data$relevant_skills[[index[j]]])),collapse = ",") ), width = 3,
+          fluidRow(
+            flexdashboard::gaugeOutput(paste0("gauge",index[j],"apply"))
+          )
+          #width=3
+        )
+      j<-j+1
+    }
+    
+    
+    
+    
+    v
+    
+  })
+  
+  output$box_list <- renderUI(boxes())
+  output$box_list_saved <- renderUI(boxes_save())
+  output$box_list_apply <- renderUI(boxes_apply())
 }
+
+shinyApp(ui, server)
+
+
 
 shinyApp(ui, server)
