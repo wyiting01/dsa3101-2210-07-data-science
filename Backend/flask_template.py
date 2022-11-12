@@ -8,7 +8,7 @@ from nltk.stem import PorterStemmer
 from sklearn.metrics.pairwise import cosine_similarity
 import re
 import math
-
+import ast
 
 # Load Model and Data
 df_combined = pd.read_csv('processed_data.csv')
@@ -17,6 +17,7 @@ with open('tfidf_vectorizer.pkl', 'rb') as f:
 with open('tfidf_job.pkl','rb') as g:
     matrix = pickle.load(g)
 df_articles = pd.read_csv('articlesfrommedium.csv')
+key_terms = pd.read_csv('key_terms.csv')
 
 #declare variables
 rating_dict = {
@@ -183,6 +184,26 @@ def get_average_rating():
     curr_avg_rating = rating_dict['rating']
     return f'{round(curr_avg_rating, 2)}'
 
+#Obtain key terms for each job title
+'''
+x = requests.get('http://127.0.0.1:5000/key_terms', params={'title':'data analyst'})
+output = x.json()
+
+possible inputs for 'title'= ["banking", "it","project manager",
+"software developer","product manager","data science","sales","cybersecurity",
+"electrical engineer","ai and nlp"]
+'''
+@app.route('/key_terms',methods=["GET"])
+def get_key_terms():
+    result = {}
+    title = request.args.get('title')
+    #searches key_terms for the key terms given the job title
+    try:
+        index = key_terms[key_terms['title']==title].index.values[0]
+        result['key_terms']=ast.literal_eval(key_terms['key_terms'][index])
+        return jsonify(result)
+    except:
+        return jsonify(result)
 
 #Helper Functions
 
