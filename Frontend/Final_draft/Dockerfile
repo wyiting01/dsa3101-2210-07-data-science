@@ -32,6 +32,8 @@ RUN R -e "install.packages('shinyjs', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('DT', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('rintrojs', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('visNetwork', repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages('reticulate', repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages('RJSONIO', repos = 'http://cran.rstudio.com/')"
 
 # copy the app to the image
 COPY app.R /srv/shiny-server/
