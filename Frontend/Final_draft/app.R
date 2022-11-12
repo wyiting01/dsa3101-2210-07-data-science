@@ -38,7 +38,7 @@ panel_div <- function(class_type, content) {
 }
 
 ui <- shinyUI(navbarPage(
-  title = tags$img(src="logo-removebg-preview.png", height = "120px", width = "200px"), id = "navBar",
+  title = tags$img(src="logo.png", height = "120px", width = "200px"), id = "navBar",
                          theme = "paper.css",
                          collapsible = TRUE,
                          inverse = TRUE,
@@ -409,8 +409,7 @@ server <- function(input, output) {
   x<-eventReactive(input$search, {
     
     x <- httr::POST(
-      #"http://127.0.0.1:5000/recommendation"
-      "http://data-provider-service:5000/recommendation"
+      "http://backend_server:5000/recommendation"
       , body = user_input()
       , encode = "json")
     x <- httr::content(x,as="text",encoding = "UTF-8")
