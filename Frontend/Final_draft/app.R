@@ -283,7 +283,46 @@ ui <- shinyUI(navbarPage(
                                                      textInput("search", label=NULL, value="Find jobs"
                                                      )),
                                             tabPanel("Career Guide",
-                                                     h4("This page has resume support etc.")
+                                                     fluidRow(
+                                                       box(
+                                                         title = "Guides",
+                                                         width = 12,
+                                                         height = 100,
+                                                         actionButton(inputId = 'Finding Jobs', label ="Finding Jobs", width = 200),
+                                                         actionButton(inputId = 'Resume', label ="Resume", width = 200),
+                                                         actionButton(inputId = 'Interview', label ="Interview" ,width = 200),
+                                                         actionButton(inputId = 'Contracts', label ="Contracts" ,width = 200)
+                                                       )
+                                                     ),
+                                                     fluidRow(
+                                                       h4("Frequently Asked Interview Questions"),
+                                                       tabBox(
+                                                         title = "Foodpanda",
+                                                         side="right",
+                                                         id="tabset1",
+                                                         width = 5,
+                                                         height = 200,
+                                                         tabPanel("Answers", "1) Briefly introduce yourself: What’s your name?How long have you been working as [profession]?What do you love about your job? What are your top 2-3 achievements that are relevant to the job you’re applying for?"),
+                                                         tabPanel("Questions", "1) Tell me something about yourself"), tags$a(href="https://www.foodpanda.com/", "Research about FoodPanda")),
+                                                       tabBox(
+                                                         title = "Google",
+                                                         side="right",
+                                                         id="tabset2",
+                                                         width = 5,
+                                                         height = 200,
+                                                         tabPanel("Answers", "1) Although at first glance this might seem like a straightforward question, you should grab any opportunity you can to show your interest in the company."),
+                                                         tabPanel("Questions", "1) How did you hear about this position?"), tags$a(href="https://careers.google.com/", "Research about Google"))
+                                                     ),
+                                                     fluidRow(
+                                                       box(
+                                                         title = "Data Science Career Pathways",
+                                                         width = 12,
+                                                         height = 100,
+                                                         actionButton(inputId = 'Data Science', label ="Data Science", width = 280),
+                                                         actionButton(inputId = 'Data Engineering', label ="Data Engineering", width = 280),
+                                                         actionButton(inputId = 'Data Analytics', label ="Data Analytics" ,width = 280)
+                                                       )
+                                                     )
                                             ),
                                             tabPanel("Learn!",
                                                      fluidRow(
