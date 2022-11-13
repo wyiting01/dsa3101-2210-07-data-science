@@ -225,28 +225,77 @@ ui <- shinyUI(navbarPage(
                 )
             )),
   tabPanel("HOME", value = "home",
-           dashboardPage(
-             header=dashboardHeader(title = "Data Scientist Hunt"),
-             sidebar=dashboardSidebar(
-                sidebarMenu(
-                  menuItem("Search", tabName = "Search", icon = icon("search")),
-                  menuItem("Saved", tabName = "Saved", icon = icon("save")),
-                  menuItem("Applied", tabName = "Applied", icon = icon("thumbs-up"))
-                )
-              ),
-               body=shinydashboard::dashboardBody(
-                 tabItems(
-                   tabItem("Search",
-                           fluidPage(
-                             br(),
-                             fluidRow(),
-                             ui <- navbarPage(fluid = TRUE, title = "GetHired",
+           dashboardPage(        
+             dashboardHeader(title = "DataDreams"),
+             dashboardSidebar(
+               sidebarMenu(
+                 menuItem("Search", tabName = "Search", icon = icon("search")),
+                 menuItem("Saved", tabName = "Saved", icon = icon("save")),
+                 menuItem("Applied", tabName = "Applied", icon = icon("thumbs-up"))
+               )
+             ),
+             body=shinydashboard::dashboardBody(
+               
+               tabItems(
+                 tabItem("Search",
+                         fluidPage(
+                           br(),
+                           fluidRow(),
+                           ui <- navbarPage(fluid = TRUE, title = "GetHired",
+                                            tabsetPanel(
                                               tabPanel( value= "search_panel",
                                                         textInput("search", label=NULL, value="Find jobs"
-                                                        )),
+                                                        ),title = "Home",
+                                                        fluidRow(
+                                                          column(4,
+                                                                 hr(),
+                                                                 sliderInput(inputId = "Salary", label = "Expected Salary:",
+                                                                             min = 0, max = 10000,
+                                                                             value = 0, step = 500)),
+                                                          column(4,
+                                                                 hr(),
+                                                                 selectInput(inputId = 'Industry', label='Industry', c(Choose='', industry), selectize=FALSE)
+                                                          ),
+                                                          column(4,
+                                                                 hr(),
+                                                                 selectInput(inputId = 'Location', label = 'Location', c(Choose='', Location),selectize=FALSE)
+                                                          )
+                                                        ),
+                                                        fluidRow(
+                                                          column(4,
+                                                                 hr(),
+                                                                 selectInput(inputId = 'Type', label = 'Job type', c(Choose='', jobtype),selectize=FALSE)
+                                                          ),
+                                                          column(4,
+                                                                 hr(),
+                                                                 selectInput(inputId = 'Skills', label = 'Skills', c(Choose='', skills), selectize=FALSE)
+                                                          ),
+                                                          column(4,
+                                                                 hr(),
+                                                                 selectInput(inputId = 'Jobtitle', label = 'Job title', c(Choose='', c('Data Analyst','Data Scientist')), selectize=FALSE)	
+                                                          ),	
+                                                          column(4,	
+                                                                 hr(),
+                                                                 actionButton("search", label = "Search", width = '250px')),
+                                                          
+                                                        ),
+                                                        
+                                                        br(),
+                                                        fluidRow(
+                                                          
+                                                          uiOutput("box_list"),
+                                                          
+                                                          box(
+                                                            title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
+                                                            actionButton("titleBtId", "", icon = icon("refresh"),
+                                                                         class = "btn-xs", title = "Update",
+                                                                         onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
+                                                            width = 3, solidHeader = TRUE, status = "warning",
+                                                            uiOutput("boxContentUI2")
+                                                          )
+                                                        )
+                                              ),
                                               
-                                              tabPanel("Jobs",
-                                                       h4("This page lists saved jobs?")),
                                               tabPanel("Career Guide",
                                                        fluidRow(
                                                          box(
@@ -287,7 +336,8 @@ ui <- shinyUI(navbarPage(
                                                            actionButton(inputId = 'Data Engineering', label ="Data Engineering", width = 280),
                                                            actionButton(inputId = 'Data Analytics', label ="Data Analytics" ,width = 280)
                                                          )
-                                                       )),
+                                                       )
+                                              ),
                                               tabPanel("Learn!",
                                                        fluidRow(
                                                          box(
@@ -320,60 +370,43 @@ ui <- shinyUI(navbarPage(
                                                          )
                                                        )),
                                               tabPanel("My Profile",
-                                                       h4("This page contains user profile"),fileInput("file", "Upload Your Resume"))
-                                            ),
-                             fluidRow(
-                               column(4,
-                                      hr(),
-                                      sliderInput(inputId = "Salary", label = "Expected Salary:",
-                                                  min = 0, max = 10000,
-                                                  value = 0, step = 500)),
-                               column(4,
-                                      hr(),
-                                      selectInput(inputId = 'Industry', label='Industry', c(Choose='', industry), selectize=FALSE)
-                               ),
-                               column(4,
-                                      hr(),
-                                      selectInput(inputId = 'Location', label = 'Location', c(Choose='', Location),selectize=FALSE)
-                               )
-                             ),
-                             fluidRow(
-                               column(4,
-                                      hr(),
-                                      selectInput(inputId = 'Type', label = 'Job type', c(Choose='', jobtype),selectize=FALSE)
-                               ),
-                               column(4,
-                                      hr(),
-                                      selectInput(inputId = 'Skills', label = 'Skills', c(Choose='', skills), selectize=FALSE)
-                               ),
-                               # column(4,
-                               #        hr(),
-                               #        selectInput(inputId = 'Title', label = 'Job Title', c(Choose='', title), selectize=FALSE)
-                               # ),
-                               column(4,
-                                      hr(),
-                                      actionButton("search", label = "Search", width = '250px'))
-                             ),
-                             
-                             uiOutput("box_list")
-                             
-                             
-                             
-                           )
-                   ),
-                   tabItem(tabName = "Saved",
-                           h1("Saved applications"),
-                           uiOutput("box_list_saved")
-                   ),
-                   tabItem(tabName = "Applied",
-                           h1("Jobs Applied"),
-                           uiOutput("box_list_apply")
+                                                       img(src="resume_photo.jpeg", width=200, style="display: block; margin-left: auto; margin-right: auto;"),
+                                                       h4("NAME: SARAH NG JIA HUI"),
+                                                       h4('MAJOR : DATA SCIENCE AND ANALYTICS(HONS)'),
+                                                       h4('UNIVERSITY: NATIONAL UNIVERSITY OF SINGAPORE'),
+                                                       h4('SKILLS: Python, Java, SQL, R programming, Machine Learning'),
+                                                      fileInput("file", "Upload Your Resume"))
+                                              
+                                            ))
+                           
+                           
+                         )
+                 ),
+                 tabItem(tabName = "Saved",
+                         h1("Saved applications")
+                 ),
+                 tabItem(tabName = "Applied",
+                         h1("Jobs Applied")
+                 )
                )
+               # ,
+               # fluidRow(
+               #   dataTableOutput('ex4'),
+               # 
+               #   box(
+               #     title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
+               #     actionButton("titleBtId", "", icon = icon("refresh"),
+               #                  class = "btn-xs", title = "Update",
+               #                  onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
+               #     width = 3, solidHeader = TRUE, status = "warning",
+               #     uiOutput("boxContentUI2")
+               #   )
+               # )
+             ), 
+             sidebarPanel(
+               width=3
              )
-           )
-           
-         )
-)
+           ))
 ))
 
 # Define server logic required to daw a histogram
