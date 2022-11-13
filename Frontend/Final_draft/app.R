@@ -493,43 +493,6 @@ server <- function(input, output) {
     req(json_data())
   })
   
-  observe({
-    list_data<-x()
-    
-    gauge_function<-function(i)
-    {
-      flexdashboard::gauge(value=i, 
-                           min = 0, 
-                           max = 100, 
-                           sectors = flexdashboard::gaugeSectors(success = c(80, 100), 
-                                                                 warning = c(50, 79),
-                                                                 danger = c(0, 49)),
-                           symbol = "%",
-                           label = "MATCH")
-    }
-    # call the module UI n times
-    lista<-lapply(round((100*list_data$similarity_scores)),gauge_function)
-    names(lista)<-paste0("gauge",1:length(list_data$similarity_scores))
-    
-    # for(i in length(names(lista)))
-    #  {
-    #    message("aqui")
-    #    message(i)
-    #    message(as.character(lista[[i]]))
-    #    output[[i]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
-    #    output[[paste0(i,"save")]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
-    #    output[[paste0(i,"apply")]] =flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
-    #
-    #
-    #  }
-
-    
-    
-    
-    
-    
-  })
-  
   
   
   boxes<-reactive({
@@ -557,7 +520,7 @@ server <- function(input, output) {
         box(
           title=list_data$title[i],status="warning",solidHeader=TRUE,
           paste0(list_data$hours[i] ," job $:",list_data$max_salary[i]),
-          br(), "Industry: Delivery", br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[i]]),collapse = ",") ), width = 3,
+          br(), "Industry: " ,input$Industry, br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[i]]),collapse = ",") ), width = 3,
           fluidRow(
             gaugeOutput(paste0("gauge",i)),
             box(actionButton(paste0("button",index), label="Save", icon = icon("save")),
@@ -610,7 +573,7 @@ server <- function(input, output) {
         box(
           title=list_data$title[index[j]],status="warning",solidHeader=TRUE,
           paste0(list_data$hours[index[j]] ," job $:",list_data$max_salary[index[j]]),
-          br(), "Industry: Delivery", br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
+          br(), "Industry: " ,input$Industry, br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
           fluidRow(
             flexdashboard::gaugeOutput(paste0("gauge",index[j],"save"))
             #uiOutput("widgets")
@@ -647,7 +610,7 @@ server <- function(input, output) {
         box(
           title=list_data$title[index[j]],status="warning",solidHeader=TRUE,
           paste0(list_data$hours[index[j]] ," job $:",list_data$max_salary[index[j]]),
-          br(), "Industry: Delivery", br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
+          br(), "Industry: " ,input$Industry, br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
           fluidRow(
             flexdashboard::gaugeOutput(paste0("gauge",index[j],"apply"))
           )
@@ -660,6 +623,57 @@ server <- function(input, output) {
     
     
     v
+    
+  })
+  
+  observe({
+    list_data<-x()
+    
+    gauge_function<-function(i)
+    {
+      flexdashboard::gauge(value=i, 
+                           min = 0, 
+                           max = 100, 
+                           sectors = flexdashboard::gaugeSectors(success = c(80, 100), 
+                                                                 warning = c(50, 79),
+                                                                 danger = c(0, 49)),
+                           symbol = "%",
+                           label = "MATCH")
+    }
+    # call the module UI n times
+    lista<-lapply(round((100*list_data$similarity_scores)),gauge_function)
+    names(lista)<-paste0("gauge",1:length(list_data$similarity_scores))
+    
+    # for(i in names(lista))
+    # {
+    # output$names(lista) = renderGauge({
+    #   gauge(list_data[[i]]$similarity_scores, 
+    #         min = 0, 
+    #         max = 100, 
+    #         sectors = gaugeSectors(success = c(80, 100), 
+    #                                warning = c(50, 79),
+    #                                danger = c(0, 49)),
+    #         symbol = "%",
+    #         label = "MATCH")
+    # })
+    # }
+    
+    # for(i in names(lista))
+    # {
+    #   message("aqui")
+    #   message(i)
+    #   message(as.character(lista[i]))
+    #   output[[i]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+    #   output[[paste0(i,"save")]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+    #   output[[paste0(i,"apply")]] =flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+    #   
+    #   
+    # }
+    # 
+    
+    
+    
+    
     
   })
   output$box_list <- renderUI(boxes())
