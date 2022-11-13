@@ -22,6 +22,8 @@ library(shinyjs)
 library(DT)
 library(visNetwork)
 library(rintrojs)
+library(tidyverse)
+library(base)
 
 Location <- c('East','West','South','North','NorthEast','SouthEast','SouthWest','NorthWest')
 industry <- c('Finance','Media','Healthcare','Retail','Telecommunications','Automotive','Digital Marketing', 'Professional Services','Cyber Security', 'Mining','Government','Manufacturing','Transport')
@@ -279,48 +281,12 @@ ui <- shinyUI(navbarPage(
                            br(),
                            fluidRow(),
                            ui <- navbarPage(fluid = TRUE, title = "GetHired",
+                                            tabsetPanel(
                                             tabPanel(value= "search_panel",
                                                      textInput("search", label=NULL, value="Find jobs"
-                                                     )),
-                                            tabPanel("Career Guide",
-                                                     h4("This page has resume support etc.")
-                                            ),
-                                            tabPanel("Learn!",
-                                                     fluidRow(
-                                                       box(
-                                                         title = "Intro to R Programming",
-                                                         width = 3,
-                                                         height = 200,
-                                                         img(src="john_hopkins_uni_logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
-                                                         tags$a(href="https://www.coursera.org/learn/r-programming", "Link to the course")),
-                                                       box(
-                                                         title = "Applied Data Science with Python",
-                                                         width = 3,
-                                                         height = 200,
-                                                         img(src="University-of-Michigan-Logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
-                                                         tags$a(href="https://www.coursera.org/specializations/data-science-python", "Link to the course")),
-                                                       box(
-                                                         title = "Machine Learning",
-                                                         width = 3,
-                                                         height = 200,
-                                                         img(src="Stanford-logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
-                                                         tags$a(href="https://www.coursera.org/specializations/machine-learning-introduction", "Link to the course"))
                                                      ),
-                                                     fluidRow(
-                                                       box(
-                                                         title = "Technical Test Practice",
-                                                         width = 10,
-                                                         height = 150,
-                                                         actionButton(inputId = 'Easy', label ="easy", width = 280),
-                                                         actionButton(inputId = 'Moderate', label ="moderate", width = 280),
-                                                         actionButton(inputId = 'Hard', label ="hard" ,width = 280),
-                                                       )
-                                                     )
-                                                    ),
-                                            tabPanel("My Profile",
-                                                     h4("This page contains user profile"), fileInput("file", "Upload Your Resume")
-                                                     )
-                           ),
+                                                     title = "Home",
+                                                    
                            fluidRow(
                              column(4,
                                     hr(),
@@ -347,9 +313,100 @@ ui <- shinyUI(navbarPage(
                              ),
                              column(4,
                                     hr(),
-                                    actionButton("search", label = "Search", width = '250px'))
+                                    actionButton("search", label = "Search", width = '250px')),
                            ),
-                           uiOutput("box_list")
+                           br(),
+                           fluidRow(
+                             dataTableOutput('ex4'),
+                             uiOutput("box_list"),
+                             
+                             box(
+                               title = "Daily Updates", background = "black", "Catch What's on the Data Science News Today!",
+                               actionButton("titleBtId", "", icon = icon("refresh"),
+                                            class = "btn-xs", title = "Update",
+                                            onclick ="window.open('https://medium.com/towards-data-science/how-data-scientists-level-up-their-coding-skills-edf15bbde334', '_blank')"),
+                               width = 3, solidHeader = TRUE, status = "warning",
+                               uiOutput("boxContentUI2")
+                             )
+                           )
+                                            ),
+                           tabPanel("Career Guide",
+                                    fluidRow(
+                                      box(
+                                        title = "Guides",
+                                        width = 12,
+                                        height = 100,
+                                        actionButton(inputId = 'Finding Jobs', label ="Finding Jobs", width = 200),
+                                        actionButton(inputId = 'Resume', label ="Resume", width = 200),
+                                        actionButton(inputId = 'Interview', label ="Interview" ,width = 200),
+                                        actionButton(inputId = 'Contracts', label ="Contracts" ,width = 200)
+                                      )
+                                    ),
+                                    fluidRow(
+                                      h4("Frequently Asked Interview Questions"),
+                                      tabBox(
+                                        title = "Foodpanda",
+                                        side="right",
+                                        id="tabset1",
+                                        width = 5,
+                                        height = 200,
+                                        tabPanel("Answers", "1) Briefly introduce yourself: What’s your name?How long have you been working as [profession]?What do you love about your job? What are your top 2-3 achievements that are relevant to the job you’re applying for?"),
+                                        tabPanel("Questions", "1) Tell me something about yourself"), tags$a(href="https://www.foodpanda.com/", "Research about FoodPanda")),
+                                      tabBox(
+                                        title = "Google",
+                                        side="right",
+                                        id="tabset2",
+                                        width = 5,
+                                        height = 200,
+                                        tabPanel("Answers", "1) Although at first glance this might seem like a straightforward question, you should grab any opportunity you can to show your interest in the company."),
+                                        tabPanel("Questions", "1) How did you hear about this position?"), tags$a(href="https://careers.google.com/", "Research about Google"))
+                                    ),
+                                    fluidRow(
+                                      box(
+                                        title = "Data Science Career Pathways",
+                                        width = 12,
+                                        height = 100,
+                                        actionButton(inputId = 'Data Science', label ="Data Science", width = 280),
+                                        actionButton(inputId = 'Data Engineering', label ="Data Engineering", width = 280),
+                                        actionButton(inputId = 'Data Analytics', label ="Data Analytics" ,width = 280)
+                                      )
+                                    )
+                           ),
+                           tabPanel("Learn!",
+                                    fluidRow(
+                                      box(
+                                        title = "Intro to R Programming",
+                                        width = 3,
+                                        height = 200,
+                                        img(src="john_hopkins_uni_logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
+                                        tags$a(href="https://www.coursera.org/learn/r-programming", "Link to the course")),
+                                      box(
+                                        title = "Applied Data Science with Python",
+                                        width = 3,
+                                        height = 200,
+                                        img(src="University-of-Michigan-Logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
+                                        tags$a(href="https://www.coursera.org/specializations/data-science-python", "Link to the course")),
+                                      box(
+                                        title = "Machine Learning",
+                                        width = 3,
+                                        height = 200,
+                                        img(src="Stanford-logo.png", width=150, style="display: block; margin-left: auto; margin-right: auto;vertical-align:middle"),
+                                        tags$a(href="https://www.coursera.org/specializations/machine-learning-introduction", "Link to the course"))
+                                    ),
+                                    fluidRow(
+                                      box(
+                                        title = "Technical Test Practice",
+                                        width = 12,
+                                        height = 100,
+                                        actionButton(inputId = 'Easy', label ="easy", width = 280),
+                                        actionButton(inputId = 'Moderate', label ="moderate", width = 280),
+                                        actionButton(inputId = 'Hard', label ="hard" ,width = 280),
+                                      )
+                                    )),
+                           tabPanel("My Profile",
+                                    h4("This page contains user profile"), fileInput("file", "Upload Your Resume"))
+                           
+                                            ))
                                                      
                            
                          )
@@ -363,9 +420,12 @@ ui <- shinyUI(navbarPage(
                          uiOutput("box_list_apply")
                  )
                )
+             ),
+             sidebarPanel(
+               width=3
              )
            )
-  ),
+  )
 )
 )
           
@@ -434,43 +494,6 @@ server <- function(input, output) {
     req(json_data())
   })
   
-  observe({
-    list_data<-x()
-    
-    gauge_function<-function(i)
-    {
-      flexdashboard::gauge(value=i, 
-                           min = 0, 
-                           max = 100, 
-                           sectors = flexdashboard::gaugeSectors(success = c(80, 100), 
-                                                                 warning = c(50, 79),
-                                                                 danger = c(0, 49)),
-                           symbol = "%",
-                           label = "MATCH")
-    }
-    # call the module UI n times
-    lista<-lapply(round((100*list_data$similarity_scores)),gauge_function)
-    names(lista)<-paste0("gauge(",1:length(list_data$similarity_scores),")")
-    
-    # for(i in names(lista))
-    # {
-    #   message("aqui")
-    #   message(i)
-    #   message(as.character(lista[[i]]))
-    #   output[[i]] = renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
-    #   output[[paste0(i,"save")]] = renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
-    #   output[[paste0(i,"apply")]] = renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
-    #   
-    # 
-    # }
-
-    
-    
-    
-    
-    
-  })
-  
   
   
   boxes<-reactive({
@@ -498,7 +521,7 @@ server <- function(input, output) {
         box(
           title=list_data$title[i],status="warning",solidHeader=TRUE,
           paste0(list_data$hours[i] ," job $:",list_data$max_salary[i]),
-          br(), "Industry: Delivery", br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[i]]),collapse = ",") ), width = 3,
+          br(), "Industry: " ,input$Industry, br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[i]]),collapse = ",") ), width = 3,
           fluidRow(
             gaugeOutput(paste0("gauge",i)),
             box(actionButton(paste0("button",index), label="Save", icon = icon("save")),
@@ -551,7 +574,7 @@ server <- function(input, output) {
         box(
           title=list_data$title[index[j]],status="warning",solidHeader=TRUE,
           paste0(list_data$hours[index[j]] ," job $:",list_data$max_salary[index[j]]),
-          br(), "Industry: Delivery", br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
+          br(), "Industry: " ,input$Industry, br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
           fluidRow(
             flexdashboard::gaugeOutput(paste0("gauge",index[j],"save"))
             #uiOutput("widgets")
@@ -588,7 +611,7 @@ server <- function(input, output) {
         box(
           title=list_data$title[index[j]],status="warning",solidHeader=TRUE,
           paste0(list_data$hours[index[j]] ," job $:",list_data$max_salary[index[j]]),
-          br(), "Industry: Delivery", br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
+          br(), "Industry: " ,input$Industry, br(), paste0("Skills: ",paste0(unlist(list_data$relevant_skills[[index[j]]]),collapse = ",") ), width = 3,
           fluidRow(
             flexdashboard::gaugeOutput(paste0("gauge",index[j],"apply"))
           )
@@ -601,6 +624,57 @@ server <- function(input, output) {
     
     
     v
+    
+  })
+  
+  observe({
+    list_data<-x()
+    
+    gauge_function<-function(i)
+    {
+      flexdashboard::gauge(value=i, 
+                           min = 0, 
+                           max = 100, 
+                           sectors = flexdashboard::gaugeSectors(success = c(80, 100), 
+                                                                 warning = c(50, 79),
+                                                                 danger = c(0, 49)),
+                           symbol = "%",
+                           label = "MATCH")
+    }
+    # call the module UI n times
+    lista<-lapply(round((100*list_data$similarity_scores)),gauge_function)
+    names(lista)<-paste0("gauge",1:length(list_data$similarity_scores))
+    
+    # for(i in names(lista))
+    # {
+    # output$names(lista) = renderGauge({
+    #   gauge(list_data[[i]]$similarity_scores, 
+    #         min = 0, 
+    #         max = 100, 
+    #         sectors = gaugeSectors(success = c(80, 100), 
+    #                                warning = c(50, 79),
+    #                                danger = c(0, 49)),
+    #         symbol = "%",
+    #         label = "MATCH")
+    # })
+    # }
+    
+    # for(i in names(lista))
+    # {
+    #   message("aqui")
+    #   message(i)
+    #   message(as.character(lista[i]))
+    #   output[[i]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+    #   output[[paste0(i,"save")]] = flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+    #   output[[paste0(i,"apply")]] =flexdashboard::renderGauge(expr=as.expression(lista[[i]]),quoted=TRUE)
+    #   
+    #   
+    # }
+    # 
+    
+    
+    
+    
     
   })
   output$box_list <- renderUI(boxes())

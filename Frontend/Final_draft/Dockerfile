@@ -36,6 +36,7 @@ RUN R -e "install.packages('reticulate', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('RJSONIO', repos = 'http://cran.rstudio.com/')"
 
 # copy the app to the image
+COPY . /srv/shiny-server/
 COPY app.R /srv/shiny-server/
 COPY www/logo.png /srv/shiny-server/
 
