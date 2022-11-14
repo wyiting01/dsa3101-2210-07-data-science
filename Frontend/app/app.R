@@ -416,6 +416,7 @@ server <- function(input, output) {
   user_input  <- reactive({
     list(
       expected_salary = input$Salary,
+      job_title=input$job_title,
       industry = input$Industry,
       location = input$Location,
       expected_hours = input$Type,
