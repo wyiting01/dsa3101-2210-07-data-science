@@ -1,4 +1,25 @@
 # dsa3101-2210-07-data-science
+## instructions to run Frontend webpage
+
+1) Build Images:
+#cd into Frontend
+docker build . -t data-consumer-service 
+
+#cd into Backend
+docker build . -t data-provider-service
+
+2) create nework:
+
+docker network create shinyapp-python
+
+3) Run Images:
+
+docker run --name=data-provider-service --net=shinyapp-python -p 5000:5000 -d data-provider-service
+docker run --name=data-consumer-service --net=shinyapp-python -p 6233:3838 -d data-consumer-service
+
+4) Open in web server:
+
+http://127.0.0.1:6233
 
 ## Instructions to Run Backend Model
 <p> 1. Enter the Backend directory <p>
